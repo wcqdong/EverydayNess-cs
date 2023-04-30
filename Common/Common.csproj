@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Kenel\Core\Core.csproj" />
+    </ItemGroup>
+
 </Project>

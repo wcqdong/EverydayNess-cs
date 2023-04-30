@@ -7,4 +7,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Services\GameService\GameService.csproj" />
+      <ProjectReference Include="..\Services\SceneService\SceneService.csproj" />
+    </ItemGroup>
+
 </Project>
