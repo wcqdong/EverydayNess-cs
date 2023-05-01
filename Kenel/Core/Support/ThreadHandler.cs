@@ -45,7 +45,7 @@ public class ThreadHandler
                 _watch.Stop();
 
                 long runningTime = _watch.ElapsedMilliseconds;
-                Console.WriteLine($"running time {runningTime}ms");
+                // Console.WriteLine($"running time {runningTime}ms");
                 if (runningTime < CoreConst.TickInterval)
                 {
                     Thread.Sleep((int)(CoreConst.TickInterval - runningTime));

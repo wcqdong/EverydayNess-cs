@@ -86,26 +86,39 @@ public class Port : IThread
         _now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
         // 确认这一帧要处理的call和returnCall
+        _watch.Restart();
         Affirm();
+        _watch.Stop();
+        Console.WriteLine($"{PortId},Affirm,{_watch.ElapsedMilliseconds}");
 
-        _watch.Start();
+
         // 处理calls
+        _watch.Restart();
         TickCalls();
+        _watch.Stop();
+        Console.WriteLine($"{PortId},TickCalls,{_watch.ElapsedMilliseconds}");
 
         // 处理超时的回调
+        _watch.Restart();
         TickCallBackTimeout();
+        _watch.Stop();
+        Console.WriteLine($"{PortId},TickCallBackTimeout,{_watch.ElapsedMilliseconds}");
 
         // Tick驱动service
+        _watch.Restart();
         TickServices();
+        _watch.Stop();
+        Console.WriteLine($"{PortId},TickServices,{_watch.ElapsedMilliseconds}");
 
         // Tick等待任务队列
+        _watch.Restart();
         TickTasks();
+        _watch.Stop();
+        Console.WriteLine($"{PortId},TickTasks,{_watch.ElapsedMilliseconds}");
 
         _watch.Stop();
 
 
-
-        _watch.Reset();
     }
 
     private void TickCallBackTimeout()
