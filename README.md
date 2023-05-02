@@ -18,7 +18,7 @@
 
 
 # 实现
-## RPC（50%）
+## RPC（70%）
 实现Service间异步通信，无视在哪个进程或线程  
 
 异步调用无非两个步骤，调度和回调，调度决定rpc发送到哪个线程、进程，回调决定rpc返回时回到原线程。  
@@ -57,3 +57,22 @@ RcpGenerator的伴生物，Rpc的参数可以是任意类型，那么就要对�
 ## 性能
 * 消息队列：简单压测后发现C#的ConcurrentQueue性能不佳。是否有代替方案？
 * CallBack：C#协程这一套，roslyn生成的回调代码中MoveNext性能消耗大。
+
+
+# GetStart
+Before All
+修改启动项
+![img.png](Imgs/img1.png)
+![img.png](Imgs/img2.png)
+
+为什么？
+BootStrap为引导程序，BootStrap并不应用Service工程，根据DistributeConfig.yml分布式配置内容动态加载[Xxx]Service.dll，所以启动参数要传入DistributeConfig.yml，也正因为BootStrap没引用Service工程，所以启动时不会触发Service工程的增量编译，所以Before lunch中改为Build solution
+
+
+
+
+以创建Game服为例
+1. 在Services目录下创建GameService程序集
+2. 创建GameService.cs，NameSpace为GameService，继承Service并标记特性[Service]
+3. 创建StarUp类，namespace为GameService，创建static启动函数，并标记为[Starter]，StartUp负责该Service的初始化
+4. 
