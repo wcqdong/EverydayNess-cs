@@ -60,17 +60,21 @@ RcpGenerator的伴生物，Rpc的参数可以是任意类型，那么就要对�
 
 
 # GetStart
-Before All
+## Before All
+
 修改启动项
+
 ![img.png](Imgs/img1.png)
 ![img.png](Imgs/img2.png)
 
 为什么？
+
 BootStrap为引导程序，BootStrap并不应用Service工程，根据DistributeConfig.yml分布式配置内容动态加载[Xxx]Service.dll，所以启动参数要传入DistributeConfig.yml，也正因为BootStrap没引用Service工程，所以启动时不会触发Service工程的增量编译，所以Before lunch中改为Build solution
 
 
 
 
+## 例子
 以创建Game服为例
 1. 在Services目录下创建GameService程序集
 2. 创建GameService.cs，NameSpace为GameService，继承Service并标记特性[Service]
