@@ -1,22 +1,23 @@
-local: world1
+local: world1 # 本地启动world1节点
 nodes:
-  world1:
-     # 无状态服务
-    stateless:
-      game: 10
-      scene: 5
+  world1: # 节点名称，即进程名称
 
-    # 有状态服务
-    stateful:
-      global1: 
-        # - union
+    stateless: # 状态服务的配置
+      game: 10 # 启动10个线程的game线程，分别为game1、game2、game3……
+      scene: 5
+    
+    stateful: # 有状态服务的配置
+      global1: # 线程名，一个global1线程下可以启动多个服务
+        # - union 
         # - team
         # - sceneGlobal
-      global2:
+      global2: # 线程名，一个global2线程下可以启动多个服务
         # - chat
-        - match
+        - match # 匹配服，全局只有一个，启动在world1进程global2线程下
 
-  world2:
+
+
+  world2: # 因为local：world1，所以该节点为远程节点，以后用服务发现的工具管理服务
     # 无状态服务
     stateless:
       game: 10

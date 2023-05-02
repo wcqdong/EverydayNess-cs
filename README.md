@@ -75,8 +75,13 @@ BootStrap为引导程序，BootStrap并不应用Service工程，根据Distribute
 
 
 ## 例子
-以创建Game服为例
+以创建GameService服为例
 1. 在Services目录下创建GameService程序集
 2. 创建GameService.cs，NameSpace为GameService，继承Service并标记特性[Service]
-3. 创建StarUp类，namespace为GameService，创建static启动函数，并标记为[Starter]，StartUp负责该Service的初始化
-4. 
+3. 创建StarUp类，namespace为GameService，创建static启动函数，并标记为[Starter]，StartUp负责该Service的初始化，无初始化内容可以不创建。
+4. 把GameService的简写名game或Game配置在DistributeConfig.yml中
+
+DistributeConfig.yml说明
+分布式配置中的服务分为两种
+* 有状态服务：例如帮派、队伍、排行榜、匹配等全局只有一个的服务，即单点
+* 无状态服务：例如场景和逻辑服等可以有多个服务
