@@ -4,7 +4,6 @@ using System.Reflection;
 using Core.Attributes;
 using Core.Config;
 using Core.Core;
-using Core.Extensions;
 using Core.Support;
 using Core.Utils;
 
@@ -69,7 +68,7 @@ class Program
 
 
         // 加载有状态服务的Assembly
-        foreach (var shortNames in localNode.Stateful.Values)
+        foreach (var shortNames in localNode.Global.Values)
         {
             if (shortNames == null)
             {
@@ -79,7 +78,7 @@ class Program
         }
 
         // 加载无状态服务的Assembly
-        LoadServiceAssembly(localNode.Stateless.Keys.ToList(), assemblies, dirs);
+        LoadServiceAssembly(localNode.Normal.Keys.ToList(), assemblies, dirs);
 
         return assemblies;
 
@@ -97,7 +96,7 @@ class Program
 #if DEBUG
                     assemblies.Add(fullName, Assembly.LoadFrom($"{serviceDirInfo}/bin/Debug/net6.0/{serviceDirInfo.Name}.dll"));
 #else
-                    assemblies.Add(serviceDirName, Assembly.LoadFrom($"{serviceDir}/bin/Release/net6.0/{serviceDir.Name}.dll"));
+                    assemblies.Add(fullName, Assembly.LoadFrom($"{serviceDirInfo}/bin/Release/net6.0/{serviceDirInfo.Name}.dll"));
 #endif
                 }
             }
@@ -132,7 +131,7 @@ class Program
         NodeConfig localNode = DistributeConfig.GetLocalNode();
 
         // 启动有状态服务
-        foreach (var item in localNode.Stateful)
+        foreach (var item in localNode.Global)
         {
             if (item.Value == null)
             {
@@ -149,7 +148,7 @@ class Program
         }
 
 
-        foreach (var item in localNode.Stateless)
+        foreach (var item in localNode.Normal)
         {
             for (int i = 0; i < item.Value; i++)
             {

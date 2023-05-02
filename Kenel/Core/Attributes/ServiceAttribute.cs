@@ -1,10 +1,20 @@
 namespace Core.Attributes;
 
+
+public enum EServiceType
+{
+    Normal = 1,
+    Global = 2,
+
+}
 [AttributeUsage(AttributeTargets.Class)]
 public class ServiceAttribute : Attribute
 {
-    public ServiceAttribute()
+    public EServiceType Type { get; }
+
+    public ServiceAttribute(EServiceType type)
     {
+        Type = type;
     }
 }
 

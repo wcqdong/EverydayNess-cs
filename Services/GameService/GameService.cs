@@ -1,13 +1,12 @@
 using Common.Gen.Proxy;
 using Core.Attributes;
 using Core.Core;
-using Core.Support;
 using Core.Utils;
 using GameService.Gen.RpcDispatcher;
 
 namespace GameService;
 
-[Service]
+[Service(EServiceType.Normal)]
 public class GameService : Service
 {
 

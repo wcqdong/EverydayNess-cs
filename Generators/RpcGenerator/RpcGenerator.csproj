@@ -7,4 +7,22 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Kenel\Core\Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Enums.NET" Version="4.0.1" />
+      <PackageReference Include="Scriban" Version="5.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Templates\RpcDispatcher.sbn">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Templates\ServiceProxy.sbn">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

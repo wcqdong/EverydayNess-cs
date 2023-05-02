@@ -6,7 +6,7 @@ using SceneService.Gen.RpcDispatcher;
 
 namespace SceneService;
 
-[Service]
+[Service(EServiceType.Normal)]
 public class SceneService : Service
 {
 

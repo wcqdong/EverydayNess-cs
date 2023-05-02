@@ -20,8 +20,8 @@ public class DistributeConfig
 
 public class NodeConfig
 {
-    public Dictionary<string, int> Stateless { get; set; } = new();
-    public Dictionary<string, List<string>> Stateful { get; set; } = new();
+    public Dictionary<string, int> Normal { get; set; } = new();
+    public Dictionary<string, List<string>> Global { get; set; } = new();
 }
 
 // public class StatelessConfig

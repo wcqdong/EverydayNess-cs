@@ -1,5 +1,6 @@
 # EverydayNess
-一个平淡无奇的C#游戏服务器框架
+思路推演图
+![img.png](Imgs/img3.png)
 
 
 
