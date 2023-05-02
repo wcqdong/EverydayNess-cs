@@ -1,10 +1,10 @@
 using Core.Attributes;
 using Core.Core;
 
-namespace SceneService.Gen;
+namespace SceneService.Gen.RpcDispatcher;
 
 [Generated]
-public class SceneServiceProxyDispatcher : ProxyDispatcherBase
+public class SceneServiceRpcDispatcher : ServiceRpcDispatcherBase
 {
     public override EReturnType GetReturnType(int methodKey)
     {

@@ -1,3 +1,6 @@
+using Core.Extensions;
+using Core.Utils;
+
 namespace Core.Core;
 
 public abstract class Service
@@ -9,14 +12,16 @@ public abstract class Service
         set
         {
             _port = value;
-            _port.AddTask(Init);
+            _port.AddTask(_init);
         }
     }
 
     public string ServiceId { get; }
 
-    public ProxyDispatcherBase ProxyDispatcher;
-
+    /// <summary>
+    /// rpc分发
+    /// </summary>
+    public ServiceRpcDispatcherBase ServiceRpcDispatcher { get; set; }
 
 
     public Service(string serviceId)
@@ -27,16 +32,23 @@ public abstract class Service
     public virtual void Tick(long now)
     {
 
-
-
         // scheduler.AddTask(new Task(Tick));
     }
 
     protected virtual void Init()
     {
+    }
 
-
-
-        // scheduler.AddTask(new Task(Tick));
+    private void _init()
+    {
+        string fullName = CoreUtils.ServiceToFullName(ServiceId);
+        string dispatcherName = $"{fullName}.Gen.RpcDispatcher.{fullName}RpcDispatcher";
+        Type? type = GetType().Assembly.GetType(dispatcherName);
+        if (type == null)
+        {
+            throw new Exception($"{dispatcherName}没生成，请通过工具生成");
+        }
+        ServiceRpcDispatcher = (ServiceRpcDispatcherBase)Activator.CreateInstance(type)!;
+        Init();
     }
 }

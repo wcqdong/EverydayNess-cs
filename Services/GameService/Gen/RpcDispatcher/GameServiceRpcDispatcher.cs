@@ -1,10 +1,10 @@
 using Core.Attributes;
 using Core.Core;
 
-namespace GameService.Gen.RcpDispatcher;
+namespace GameService.Gen.RpcDispatcher;
 
 [Generated]
-public class GameServiceProxyDispatcher : ProxyDispatcherBase
+public class GameServiceRpcDispatcher : ServiceRpcDispatcherBase
 {
     public override EReturnType GetReturnType(int methodKey)
     {

@@ -7,3 +7,14 @@ public class ServiceAttribute : Attribute
     {
     }
 }
+
+[AttributeUsage(AttributeTargets.Class)]
+public class SingleServiceAttribute : Attribute
+{
+    public string ServiceId { get; }
+
+    public SingleServiceAttribute(string serverId)
+    {
+        ServiceId = serverId;
+    }
+}

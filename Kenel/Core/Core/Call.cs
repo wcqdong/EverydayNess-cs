@@ -8,11 +8,11 @@ public class Call
     // 0=发送  1=返回
     public int Type;
 
-    //
+    //  FROM
     public string FromNode;
     public string FromPort;
-    // public object FromService;
 
+    // TO
     public CallPoint To;
 
 
@@ -24,7 +24,11 @@ public class Call
     // 回调
     public uint CallBackId;
 
-    // public bool NeedResult;
-
     public object result;
+
+
+    public override string ToString()
+    {
+        return $"{FromNode}.{FromPort} --> {To} :: {MethodKey}";
+    }
 }

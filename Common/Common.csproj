@@ -10,4 +10,13 @@
       <ProjectReference Include="..\Kenel\Core\Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="YamlDotNet" Version="13.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Config\" />
+      <Folder Include="Support\" />
+    </ItemGroup>
+
 </Project>

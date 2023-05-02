@@ -1,6 +1,6 @@
 namespace Core.Core;
 
-public abstract class ProxyDispatcherBase
+public abstract class ServiceRpcDispatcherBase
 {
     public enum EReturnType
     {

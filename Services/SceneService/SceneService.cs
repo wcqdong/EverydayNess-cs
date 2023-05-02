@@ -1,8 +1,8 @@
 using Common.Gen.Proxy;
 using Core.Attributes;
 using Core.Core;
-using Core.Support;
-using SceneService.Gen;
+using Core.Utils;
+using SceneService.Gen.RpcDispatcher;
 
 namespace SceneService;
 
@@ -19,7 +19,7 @@ public class SceneService : Service
     {
         base.Init();
         // TODO 以后通过代码生成初始化 _rpcDispatcher
-        ProxyDispatcher = new SceneServiceProxyDispatcher();
+        ServiceRpcDispatcher = new SceneServiceRpcDispatcher();
 
 
         // TODO callpoint一定来源于一个地方，而不是随意手动创建的

@@ -20,7 +20,7 @@ public class Node
     {
         if(!_ports.TryGetValue(call.To.PortId, out var toPort))
         {
-            Console.WriteLine("目标线程不存在");
+            Console.WriteLine($"{call} 目标线程不存在");
             return;
         }
 

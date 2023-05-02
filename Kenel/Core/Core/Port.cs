@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using ConsoleApp63;
 using Core.Support;
+using Core.Utils;
 
 namespace Core.Core;
 
@@ -221,21 +222,21 @@ public class Port : IThread
                 return;
             }
 
-            ProxyDispatcherBase.EReturnType returnType = service.ProxyDispatcher.GetReturnType(call.MethodKey);
+            ServiceRpcDispatcherBase.EReturnType returnType = service.ServiceRpcDispatcher.GetReturnType(call.MethodKey);
             switch (returnType)
             {
-                case ProxyDispatcherBase.EReturnType.VOID:
-                    service.ProxyDispatcher.CallVoid(service, call.MethodKey, call.MethodParams);
+                case ServiceRpcDispatcherBase.EReturnType.VOID:
+                    service.ServiceRpcDispatcher.CallVoid(service, call.MethodKey, call.MethodParams);
                     break;
-                case ProxyDispatcherBase.EReturnType.OBJECT:
-                    call.result = service.ProxyDispatcher.CallObject(service, call.MethodKey, call.MethodParams);
+                case ServiceRpcDispatcherBase.EReturnType.OBJECT:
+                    call.result = service.ServiceRpcDispatcher.CallObject(service, call.MethodKey, call.MethodParams);
                     Returns(call);
                     break;
-                case ProxyDispatcherBase.EReturnType.TASK_VOID:
-                    await service.ProxyDispatcher.CallTaskVoid(service, call.MethodKey, call.MethodParams);
+                case ServiceRpcDispatcherBase.EReturnType.TASK_VOID:
+                    await service.ServiceRpcDispatcher.CallTaskVoid(service, call.MethodKey, call.MethodParams);
                     break;
-                case ProxyDispatcherBase.EReturnType.TASK_OBJECT:
-                    call.result = await service.ProxyDispatcher.CallTaskObject(service, call.MethodKey, call.MethodParams);
+                case ServiceRpcDispatcherBase.EReturnType.TASK_OBJECT:
+                    call.result = await service.ServiceRpcDispatcher.CallTaskObject(service, call.MethodKey, call.MethodParams);
                     Returns(call);
                     break;
             }
