@@ -17,7 +17,7 @@
 
 
 # 实现
-## RPC（70%）
+## RPC（完成）
 实现Service间异步通信，无视在哪个进程或线程  
 
 异步调用无非两个步骤，调度和回调，调度决定rpc发送到哪个线程、进程，回调决定rpc返回时回到原线程。  
@@ -66,9 +66,14 @@ RcpGenerator的伴生物，Rpc的参数可以是任意类型，那么就要对�
 ![img.png](Imgs/img1.png)
 ![img.png](Imgs/img2.png)
 
+node1参数为DistributeConfig.yml中配置的节点名，意味着启动该节点
+
+
 为什么？
 
-BootStrap为引导程序，BootStrap并不应用Service工程，根据DistributeConfig.yml分布式配置内容动态加载[Xxx]Service.dll，所以启动参数要传入DistributeConfig.yml，也正因为BootStrap没引用Service工程，所以启动时不会触发Service工程的增量编译，所以Before lunch中改为Build solution
+BootStrap为引导程序，BootStrap并不引用Service工程，而是根据DistributeConfig.yml分布式配置内容动态加载[Xxx]Service.dll，所以启动参数要传入节点名（node1或node2（可自定义）），告诉BootStrap加载该节点下的service.dll，并按配置启动服务。
+
+也正因为BootStrap没引用Service工程，所以启动时不会触发Service工程的增量编译，所以Before lunch中改为Build solution
 
 
 
@@ -87,6 +92,3 @@ DistributeConfig.yml说明
 
 
 
-
-
-![img.png](img.png)
