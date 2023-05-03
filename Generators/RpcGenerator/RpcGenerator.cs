@@ -1,9 +1,8 @@
 using System.Reflection;
 using Core.Attributes;
 using Core.Core;
-using Core.Support;
 using Core.Utils;
-using Gen;
+using RpcGenerator.Extensions;
 using RpcGenerator.Helpers;
 using Scriban;
 
@@ -32,17 +31,17 @@ public class RpcGenerator
 
         foreach (var record in serviceRecords)
         {
-            string dispatcherName = $"{record.Name}RpcDispatcher1.cs";
-            Render(record, dispatcherName, $"{GeneratorConst.BaseDir}Services/{record.Name}/Gen/RpcDispatcher/", _templateRpcDispatcher);
-            string proxyName = $"{record.Name}Proxy1.cs";
-            Render(record, proxyName, $"{GeneratorConst.BaseDir}Common/Gen/Proxy/", _templateServiceProxy);
+            string dispatcherName = $"{record.Name}RpcDispatcher.cs";
+            Render(record, dispatcherName, $"{GeneratorConst.BaseDir}Services/{record.Name}/Gen/RpcDispatcher/", _templateRpcDispatcher).GetAwaiter().GetResult();
+            string proxyName = $"{record.Name}Proxy.cs";
+            Render(record, proxyName, $"{GeneratorConst.BaseDir}Common/Gen/Proxy/", _templateServiceProxy).GetAwaiter().GetResult();
         }
     }
 
 
     private static async Task Render(ServiceRecord record, string fileName, string filePath, Template template)
     {
-        string output = $"{filePath}{fileName}.cs";
+        string output = $"{filePath}{fileName}";
         await template.WriteAsync(output, new
         {
             Record = record
@@ -80,7 +79,7 @@ public class RpcGenerator
 
             ServiceRecord serviceRecord = new ServiceRecord(type, (int)attr.Type);
             // 默认加一个ServiceRpcDispatcherBase的NameSpace
-            serviceRecord.AddNamespace(typeof(ServiceRpcDispatcherBase));
+            serviceRecord.AddUsing(typeof(ServiceRpcDispatcherBase));
             FindRpcMethod(type, serviceRecord);
 
             return serviceRecord;

@@ -1,34 +1,41 @@
 using System.Reflection;
 using System.Text;
+using Core.Config;
+using Core.Core;
+using Core.Extensions;
 
 namespace RpcGenerator;
 
 public class ServiceRecord
 {
     public string Name;
-    public readonly HashSet<string> Namespaces = new ();
+    public string ServiceId;
+    public readonly HashSet<string> DispatcherUsings = new ();
+    public readonly HashSet<string> ProxyUsings = new ();
     public int ServiceType;
     public List<MethodRecord> Methods = new();
 
     public ServiceRecord(Type type, int serviceType)
     {
         Name = Transition.TransName(type);
-        AddNamespace(type);
+        ServiceId = Name.Replace("Service", "").ToLowerFirst();
+        // proxy需要的类
+        ProxyUsings.Add(Transition.TransNamespace(typeof(DistributeConfig))!);
+
         ServiceType = serviceType;
     }
 
-    public void AddNamespace(Type type)
+    public void AddUsing(Type type)
     {
         string? v = Transition.TransNamespace(type);
-        if (v != null)
-        {
-            Namespaces.Add(v);
-        }
+        if (v == null) return;
+        DispatcherUsings.Add(v);
+        ProxyUsings.Add(v);
     }
 
-    public void AddNamespace(string nameSpace)
+    public void AddUsing(string nameSpace)
     {
-        Namespaces.Add(nameSpace);
+        ProxyUsings.Add(nameSpace);
     }
 }
 
@@ -40,6 +47,8 @@ public class MethodRecord
     public string Name;
     public int Index;
     public string ReturnType;
+    public string AsyncReturnType;
+    public int CallType;
 
     public List<ParamRecord> Parameters = new();
 
@@ -52,7 +61,7 @@ public class MethodRecord
 
     public void AddNamespace(Type type)
     {
-        _serviceRecord.AddNamespace(type);
+        _serviceRecord.AddUsing(type);
     }
 
     public void SetReturn(Type methodReturnType)
@@ -60,29 +69,41 @@ public class MethodRecord
         // 异步
         if (methodReturnType.FullName!.StartsWith("System.Threading.Tasks.Task"))
         {
-            _serviceRecord.AddNamespace("System.Threading.Tasks.Task");
             if (methodReturnType.IsGenericType)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append("async Task<");
 
-                _serviceRecord.AddNamespace(methodReturnType.GenericTypeArguments[0]);
+                _serviceRecord.AddUsing(methodReturnType.GenericTypeArguments[0]);
                 sb.Append(Transition.TransName(methodReturnType.GenericTypeArguments[0]));
 
                 sb.Append('>');
                 ReturnType = sb.ToString();
+                CallType = (int)EReturnType.ASYNC_OBJECT;
+                AsyncReturnType = Transition.TransName(methodReturnType.GenericTypeArguments[0]);
             }
             else
             {
-                _serviceRecord.AddNamespace(methodReturnType);
-                ReturnType = $"async {Transition.TransName(methodReturnType)}";
+                _serviceRecord.AddUsing(methodReturnType);
+                ReturnType = "void";
+                CallType = (int)EReturnType.ASYNC_VOID;
             }
-
         }
         else
         {
-            _serviceRecord.AddNamespace(methodReturnType);
-            ReturnType = Transition.TransName(methodReturnType);
+            _serviceRecord.AddUsing(methodReturnType);
+            if (methodReturnType.FullName.Equals("System.Void"))
+            {
+                ReturnType = "void";
+                CallType = (int)EReturnType.VOID;
+            }
+            else
+            {
+
+                ReturnType = $"async Task<{Transition.TransName(methodReturnType)}>";
+                AsyncReturnType = Transition.TransName(methodReturnType);
+                CallType = (int)EReturnType.OBJECT;
+            }
         }
     }
 }

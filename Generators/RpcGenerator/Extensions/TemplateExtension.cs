@@ -1,11 +1,11 @@
 
 using System.Text;
-using RpcGenerator;
+using RpcGenerator.Helpers;
 using Scriban;
 using Scriban.Parsing;
 using Scriban.Runtime;
 
-namespace Gen;
+namespace RpcGenerator.Extensions;
 
 public static class TemplateExtension
 {

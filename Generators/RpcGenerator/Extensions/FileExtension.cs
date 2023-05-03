@@ -1,5 +1,5 @@
 
-namespace Gen;
+namespace RpcGenerator.Extensions;
 
 public static class FileExtension
 {

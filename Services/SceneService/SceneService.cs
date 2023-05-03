@@ -25,11 +25,11 @@ public class SceneService : Service
         // TODO callpoint一定来源于一个地方，而不是随意手动创建的
         // TODO 比如逻辑服玩家一定持有场景服玩家的一个callpoint，操作场景玩家即对一个callpint进行rpc
         string toNodeId = Port.GetCurrent().Node.NodeId;
-        string toPortId = $"{toNodeId}.GamePort0";
-        string toServiceId = $"{toPortId}.GameService0";
+        string toPortId = "game0";
+        string toServiceId = "game";
         CallPoint _sceneCallPoint = new CallPoint(toNodeId, toPortId, toServiceId);
 
-        _gameServiceProxy = new GameServiceProxy(_sceneCallPoint);
+        _gameServiceProxy = GameServiceProxy.Inst(_sceneCallPoint);
     }
 
 

@@ -1,7 +1,7 @@
 
 using System.Text;
 
-namespace Gen;
+namespace RpcGenerator.Helpers;
 
 /// <summary>
 /// 编码常量类

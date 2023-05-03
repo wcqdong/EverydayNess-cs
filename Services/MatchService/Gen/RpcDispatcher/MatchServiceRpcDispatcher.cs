@@ -6,26 +6,53 @@ public class MatchServiceRpcDispatcher : ServiceRpcDispatcherBase
 {
     public override EReturnType GetReturnType(int methodKey)
     {
-        throw new NotImplementedException();
+        switch (methodKey)
+        {
+            default:
+                throw new Exception($"MatchServiceProxyDispatcher::GetReturnType 没找到methodKey={methodKey}的rpc函数");
+        }
+
     }
 
     public override void CallVoid(Service service, int methodKey, object[] methodParams)
     {
-        throw new NotImplementedException();
+       MatchService serv = (service as MatchService)!;
+        switch (methodKey)
+        {
+            default:
+                throw new Exception($"MatchServiceProxyDispatcher::CallVoid 没找到methodKey={methodKey}的rpc函数");
+        }
+
     }
 
     public override object CallObject(Service service, int methodKey, object[] methodParams)
     {
-        throw new NotImplementedException();
+         MatchService serv = (service as MatchService)!;
+         switch (methodKey)
+         {
+             default:
+                 throw new Exception($"MatchServiceProxyDispatcher::CallObject 没找到methodKey={methodKey}的rpc函数");
+         }
     }
 
-    public override Task CallTaskVoid(Service service, int methodKey, object[] methodParams)
+    public override async Task CallAsyncVoid(Service service, int methodKey, object[] methodParams)
     {
-        throw new NotImplementedException();
+         MatchService serv = (service as MatchService)!;
+         switch (methodKey)
+         {
+             default:
+                 throw new Exception($"MatchServiceProxyDispatcher::CallTaskVoid 没找到methodKey={methodKey}的rpc函数");
+         }
     }
 
-    public override Task<object> CallTaskObject(Service service, int methodKey, object[] methodParams)
+    public override async Task<object> CallAsyncObject(Service service, int methodKey, object[] methodParams)
     {
-        throw new NotImplementedException();
+        MatchService serv = (service as MatchService)!;
+        switch (methodKey)
+        {
+            default:
+                throw new Exception($"MatchServiceProxyDispatcher::CallTaskObject 没找到methodKey={methodKey}的rpc函数");
+        }
     }
 }
+

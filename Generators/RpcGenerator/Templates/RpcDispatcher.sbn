@@ -1,4 +1,126 @@
-﻿
-namespace {{namespace}};
+﻿{{~ for using in record.dispatcher_usings ~}}
+using {{using}};
+{{~ end ~}}
 
+namespace {{record.name}}.Gen.RpcDispatcher;
+
+public class {{record.name}}RpcDispatcher : ServiceRpcDispatcherBase
+{
+    public override EReturnType GetReturnType(int methodKey)
+    {
+        switch (methodKey)
+        {
+            {{~ for method in record.methods ~}}
+            case {{method.index}}:
+                {{~ if method.call_type == 1 ~}}
+                return EReturnType.VOID;
+                {{~ else if method.call_type == 2 ~}}
+                return EReturnType.OBJECT;
+                {{~ else if method.call_type == 3 ~}}
+                return EReturnType.ASYNC_VOID;
+                {{~ else if method.call_type == 4 ~}}
+                return EReturnType.ASYNC_OBJECT;
+                {{~ end ~}}
+            {{~ end ~}}
+            default:
+                throw new Exception($"{{record.name}}ProxyDispatcher::GetReturnType 没找到methodKey={methodKey}的rpc函数");
+        }
+
+    }
+
+    public override void CallVoid(Service service, int methodKey, object[] methodParams)
+    {
+       {{record.name}} serv = (service as {{record.name}})!;
+        switch (methodKey)
+        {
+            {{~ for method in record.methods ~}}
+                {{~ if method.call_type == 1 ~}}
+            case {{method.index}}:
+                serv.{{method.name}}(
+                    {{- if method.parameters.size > 0 ~}}
+                        {{- for i in 0..(method.parameters.size - 1) -}}
+                 ({{method.parameters[i].type}})methodParams[{{i}}]
+                            {{- if i < method.parameters.size - 1 ~}}, {{ end ~}}
+                        {{~ end -}}
+                    {{~ end -}}
+                 );
+                return;
+                {{~ end ~}}
+            {{~ end ~}}
+            default:
+                throw new Exception($"{{record.name}}ProxyDispatcher::CallVoid 没找到methodKey={methodKey}的rpc函数");
+        }
+
+    }
+
+    public override object CallObject(Service service, int methodKey, object[] methodParams)
+    {
+         {{record.name}} serv = (service as {{record.name}})!;
+         switch (methodKey)
+         {
+             {{~ for method in record.methods ~}}
+                 {{~ if method.call_type == 2 ~}}
+             case {{method.index}}:
+                 return serv.{{method.name}}(
+                    {{- if method.parameters.size > 0 ~}}
+                        {{- for i in 0..(method.parameters.size - 1) -}}
+                 ({{method.parameters[i].type}})methodParams[{{i}}]
+                            {{- if i < method.parameters.size - 1 ~}}, {{ end ~}}
+                        {{~ end -}}
+                    {{~ end -}}
+                 );
+                 {{~ end ~}}
+             {{~ end ~}}
+             default:
+                 throw new Exception($"{{record.name}}ProxyDispatcher::CallObject 没找到methodKey={methodKey}的rpc函数");
+         }
+    }
+
+    public override async Task CallAsyncVoid(Service service, int methodKey, object[] methodParams)
+    {
+         {{record.name}} serv = (service as {{record.name}})!;
+         switch (methodKey)
+         {
+             {{~ for method in record.methods ~}}
+                 {{~ if method.call_type == 3 ~}}
+             case {{method.index}}:
+                await serv.{{method.name}}(
+                    {{- if method.parameters.size > 0 ~}}
+                        {{- for i in 0..(method.parameters.size - 1) -}}
+                 ({{method.parameters[i].type}})methodParams[{{i}}]
+                            {{- if i < method.parameters.size - 1 ~}}, {{ end ~}}
+                        {{~ end -}}
+                    {{~ end -}}
+                 );
+                 return;
+                 {{~ end ~}}
+             {{~ end ~}}
+             default:
+                 throw new Exception($"{{record.name}}ProxyDispatcher::CallTaskVoid 没找到methodKey={methodKey}的rpc函数");
+         }
+    }
+
+    public override async Task<object> CallAsyncObject(Service service, int methodKey, object[] methodParams)
+    {
+        {{record.name}} serv = (service as {{record.name}})!;
+        switch (methodKey)
+        {
+            {{~ for method in record.methods ~}}
+                {{~ if method.call_type == 4 ~}}
+            case {{method.index}}:
+                return await serv.{{method.name}}(
+                   {{- if method.parameters.size > 0 ~}}
+                       {{- for i in 0..(method.parameters.size - 1) -}}
+                ({{method.parameters[i].type}})methodParams[{{i}}]
+                           {{- if i < method.parameters.size - 1 ~}}, {{ end ~}}
+                       {{~ end -}}
+                   {{~ end -}}
+                );
+                {{~ end ~}}
+            {{~ end ~}}
+            default:
+                throw new Exception($"{{record.name}}ProxyDispatcher::CallTaskObject 没找到methodKey={methodKey}的rpc函数");
+        }
+    }
+}
 

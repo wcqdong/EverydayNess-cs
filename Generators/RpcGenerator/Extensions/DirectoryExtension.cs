@@ -1,7 +1,7 @@
 
 using EnumsNET;
 
-namespace Gen;
+namespace RpcGenerator.Extensions;
 
 public static class DirectoryExtension
 {

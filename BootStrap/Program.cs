@@ -18,7 +18,8 @@ class Program
 
         // step1. 分布式配置
         // --------------------------
-        LoadDistributeConfig($"{CoreConst.BaseDir}Config/{args[0]}");
+        LoadDistributeConfig($"{CoreConst.BaseDir}Config/DistributeConfig.yml");
+        DistributeConfig.Inst.Local = args[0];
 
         // step2. 加载Service程序集
         // --------------------------

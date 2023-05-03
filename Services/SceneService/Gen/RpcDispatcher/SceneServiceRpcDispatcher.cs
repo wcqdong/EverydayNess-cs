@@ -1,9 +1,7 @@
-using Core.Attributes;
 using Core.Core;
 
 namespace SceneService.Gen.RpcDispatcher;
 
-[Generated]
 public class SceneServiceRpcDispatcher : ServiceRpcDispatcherBase
 {
     public override EReturnType GetReturnType(int methodKey)
@@ -11,74 +9,77 @@ public class SceneServiceRpcDispatcher : ServiceRpcDispatcherBase
         switch (methodKey)
         {
             case 1:
-                return EReturnType.TASK_OBJECT;
+                return EReturnType.ASYNC_OBJECT;
+            case 2:
+                return EReturnType.VOID;
             case 3:
                 return EReturnType.VOID;
-            case 11:
-                return EReturnType.VOID;
-            case 22:
+            case 4:
                 return EReturnType.OBJECT;
-            case 33:
-                return EReturnType.TASK_VOID;
-            case 44:
-                return EReturnType.TASK_OBJECT;
+            case 5:
+                return EReturnType.ASYNC_VOID;
+            case 6:
+                return EReturnType.ASYNC_OBJECT;
             default:
-                throw new Exception("SceneServiceProxyDispatcher::Call 没找到rpc函数");
+                throw new Exception($"SceneServiceProxyDispatcher::GetReturnType 没找到methodKey={methodKey}的rpc函数");
         }
+
     }
 
     public override void CallVoid(Service service, int methodKey, object[] methodParams)
     {
-        SceneService serv = (service as SceneService)!;
+       SceneService serv = (service as SceneService)!;
         switch (methodKey)
         {
-            case 3:
+            case 2:
                 serv.Test3((int)methodParams[0], (string)methodParams[1]);
-                break;
-            case 11:
+                return;
+            case 3:
                 serv.t1((int)methodParams[0], (string)methodParams[1]);
-                break;
+                return;
             default:
-                throw new Exception("SceneServiceProxyDispatcher::Call 没找到rpc函数");
+                throw new Exception($"SceneServiceProxyDispatcher::CallVoid 没找到methodKey={methodKey}的rpc函数");
         }
+
     }
 
     public override object CallObject(Service service, int methodKey, object[] methodParams)
     {
-        SceneService serv = (service as SceneService)!;
-        switch (methodKey)
-        {
-            case 22:
-                return serv.t2((int)methodParams[0], (string)methodParams[1]);
-            default:
-                throw new Exception("SceneServiceProxyDispatcher::Call 没找到rpc函数");
-        }
+         SceneService serv = (service as SceneService)!;
+         switch (methodKey)
+         {
+             case 4:
+                 return serv.t2((int)methodParams[0], (string)methodParams[1]);
+             default:
+                 throw new Exception($"SceneServiceProxyDispatcher::CallObject 没找到methodKey={methodKey}的rpc函数");
+         }
     }
 
-    public override async Task CallTaskVoid(Service service, int methodKey, object[] methodParams)
+    public override async Task CallAsyncVoid(Service service, int methodKey, object[] methodParams)
     {
-        SceneService serv = (service as SceneService)!;
-        switch (methodKey)
-        {
-            case 22:
+         SceneService serv = (service as SceneService)!;
+         switch (methodKey)
+         {
+             case 5:
                 await serv.t3((int)methodParams[0], (string)methodParams[1]);
-                return;
-            default:
-                throw new Exception("SceneServiceProxyDispatcher::Call 没找到rpc函数");
-        }
+                 return;
+             default:
+                 throw new Exception($"SceneServiceProxyDispatcher::CallTaskVoid 没找到methodKey={methodKey}的rpc函数");
+         }
     }
 
-    public override async Task<object> CallTaskObject(Service service, int methodKey, object[] methodParams)
+    public override async Task<object> CallAsyncObject(Service service, int methodKey, object[] methodParams)
     {
         SceneService serv = (service as SceneService)!;
         switch (methodKey)
         {
             case 1:
                 return await serv.Test1((int)methodParams[0], (string)methodParams[1]);
-            case 22:
+            case 6:
                 return await serv.t4((int)methodParams[0], (string)methodParams[1]);
             default:
-                throw new Exception("SceneServiceProxyDispatcher::Call 没找到rpc函数");
+                throw new Exception($"SceneServiceProxyDispatcher::CallTaskObject 没找到methodKey={methodKey}的rpc函数");
         }
     }
 }
+

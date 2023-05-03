@@ -1,6 +1,7 @@
 using System.Text;
+using RpcGenerator.Extensions;
 
-namespace Gen;
+namespace RpcGenerator.Helpers;
 
 public static class FileHelper
 {

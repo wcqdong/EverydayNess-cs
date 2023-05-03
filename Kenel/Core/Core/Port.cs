@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using ConsoleApp63;
-using Core.Support;
 using Core.Utils;
 
 namespace Core.Core;
@@ -222,21 +221,21 @@ public class Port : IThread
                 return;
             }
 
-            ServiceRpcDispatcherBase.EReturnType returnType = service.ServiceRpcDispatcher.GetReturnType(call.MethodKey);
+            EReturnType returnType = service.ServiceRpcDispatcher.GetReturnType(call.MethodKey);
             switch (returnType)
             {
-                case ServiceRpcDispatcherBase.EReturnType.VOID:
+                case EReturnType.VOID:
                     service.ServiceRpcDispatcher.CallVoid(service, call.MethodKey, call.MethodParams);
                     break;
-                case ServiceRpcDispatcherBase.EReturnType.OBJECT:
+                case EReturnType.OBJECT:
                     call.result = service.ServiceRpcDispatcher.CallObject(service, call.MethodKey, call.MethodParams);
                     Returns(call);
                     break;
-                case ServiceRpcDispatcherBase.EReturnType.TASK_VOID:
-                    await service.ServiceRpcDispatcher.CallTaskVoid(service, call.MethodKey, call.MethodParams);
+                case EReturnType.ASYNC_VOID:
+                    await service.ServiceRpcDispatcher.CallAsyncVoid(service, call.MethodKey, call.MethodParams);
                     break;
-                case ServiceRpcDispatcherBase.EReturnType.TASK_OBJECT:
-                    call.result = await service.ServiceRpcDispatcher.CallTaskObject(service, call.MethodKey, call.MethodParams);
+                case EReturnType.ASYNC_OBJECT:
+                    call.result = await service.ServiceRpcDispatcher.CallAsyncObject(service, call.MethodKey, call.MethodParams);
                     Returns(call);
                     break;
             }
@@ -299,6 +298,20 @@ public class Port : IThread
     public void AddCall(Call call)
     {
         Dispatch(call);
+    }
+
+    public Call MakeCall(CallPoint callPoint, int methodId, params object[] parameters)
+    {
+        Call call = new Call
+        {
+            FromNode = Node.NodeId,
+            FromPort = PortId,
+            To = callPoint,
+            MethodKey = methodId,
+            MethodParams = parameters
+        };
+
+        return call;
     }
 
     public void AddCallback(Call call, Task task)

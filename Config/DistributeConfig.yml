@@ -1,6 +1,5 @@
-local: world1 # 本地启动world1节点
 nodes:
-  world1: # 节点名称，即进程名称
+  node1: # 节点名称，即进程名称
 
     normal: # 状态服务的配置
       game: 10 # 启动10个线程的game线程，分别为game1、game2、game3……
@@ -17,7 +16,7 @@ nodes:
 
 
 
-  world2: # 因为local：world1，所以该节点为远程节点，以后用服务发现的工具管理服务
+  node2: # 因为local：world1，所以该节点为远程节点，以后用服务发现的工具管理服务
     # 无状态服务
     normal:
       game: 10

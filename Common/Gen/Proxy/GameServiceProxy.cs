@@ -1,69 +1,62 @@
+using Core.Config;
 using Core.Core;
 
 namespace Common.Gen.Proxy;
 
 public class GameServiceProxy
 {
-    // private static SceneServiceProxy _proxy;
+    public static GameServiceProxy Inst(CallPoint callPoint)
+    {
+        return new GameServiceProxy(callPoint);
+    }
+
+    public static GameServiceProxy Inst(string nodeIdId, string portId, object serviceId)
+    {
+        return new GameServiceProxy(nodeIdId, portId, serviceId);
+    }
+
 
     public CallPoint CallPoint { get; }
 
-    // public static SceneServiceProxy Inst()
-    // {
-    //     if (_proxy == null)
-    //     {
-    //         _proxy = new SceneServiceProxy("SceneNode", "port1", "scene");
-    //     }
-    //
-    //     return _proxy;
-    // }
-
-    public static SceneServiceProxy Inst(CallPoint callPoint)
-    {
-        return new SceneServiceProxy(callPoint);
-    }
-
-    public GameServiceProxy(string nodeIdId, string portId, object serviceId)
+    private GameServiceProxy(string nodeIdId, string portId, object serviceId)
     {
         CallPoint = new CallPoint(nodeIdId, portId, serviceId);
     }
-
-    public GameServiceProxy(CallPoint callPoint)
+    private GameServiceProxy(CallPoint callPoint)
     {
         CallPoint = callPoint;
     }
 
 
-
     #region RPC
 
-    public void Test1(int i, string s)
+    public void Test1()
     {
-        int methodId = 1;
+       Port port = Port.GetCurrent();
+       Call call = port.MakeCall(CallPoint, 1);
+       port.AddCall(call);
     }
 
-    public async Task<string> Test2(int i, string s)
+    public async Task<string> Test2(int a, string b)
     {
-        int methodId = 2;
+       Port port = Port.GetCurrent();
+       Call call = port.MakeCall(CallPoint, 2, a, b);
+       return await port.AddCall<string>(call);
+    }
 
-        Port port = Port.GetCurrent();
+    public async Task<string> Test3(int a, string b)
+    {
+       Port port = Port.GetCurrent();
+       Call call = port.MakeCall(CallPoint, 3, a, b);
+       return await port.AddCall<string>(call);
+    }
 
-        Call call = new Call
-        {
-            FromNode = port.Node.NodeId,
-            FromPort = port.PortId,
-            To = CallPoint,
-            MethodKey = methodId,
-            MethodParams = new object[]{ i, s}
-        };
-
-        Task<string> task = port.AddCall<string>(call);
-
-        return await task;
+    public async Task<string> Test4(int a, string b)
+    {
+       Port port = Port.GetCurrent();
+       Call call = port.MakeCall(CallPoint, 4, a, b);
+       return await port.AddCall<string>(call);
     }
 
     #endregion
-
-
-
 }

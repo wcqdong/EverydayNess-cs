@@ -1,4 +1,70 @@
-﻿
-namespace {{namespace}};
+﻿{{~ for using in record.proxy_usings ~}}
+using {{using}};
+{{~ end ~}}
+
+namespace Common.Gen.Proxy;
+
+public class {{record.name}}Proxy
+{
+    {{~ if record.service_type == 1 ~}}
+    public static {{record.name}}Proxy Inst(CallPoint callPoint)
+    {
+        return new {{record.name}}Proxy(callPoint);
+    }
+
+    public static {{record.name}}Proxy Inst(string nodeIdId, string portId, object serviceId)
+    {
+        return new {{record.name}}Proxy(nodeIdId, portId, serviceId);
+    }
+    {{~ else if  record.service_type == 2~}}
+    private static MatchServiceProxy Instance;
+    private static readonly object _lock = new();
+
+    public static MatchServiceProxy Inst
+    {
+        get
+        {
+            if (Instance == null)
+            {
+                lock (_lock)
+                {
+                    CallPoint callPoint = DistributeConfig.Inst.GlobalCallPoints["{{record.service_id}}"];
+                    Instance ??= new MatchServiceProxy(callPoint);
+                }
+            }
+
+            return Instance;
+        }
+    }
+    {{~ end ~}}
 
 
+    public CallPoint CallPoint { get; }
+
+    private {{record.name}}Proxy(string nodeIdId, string portId, object serviceId)
+    {
+        CallPoint = new CallPoint(nodeIdId, portId, serviceId);
+    }
+    private {{record.name}}Proxy(CallPoint callPoint)
+    {
+        CallPoint = callPoint;
+    }
+
+
+    #region RPC
+    {{~ for method in record.methods~}}
+
+    public {{method.return_type}} {{method.name}}({{if method.parameters.size > 0}}{{for i in 0..(method.parameters.size - 1)}}{{method.parameters[i].type}} {{method.parameters[i].name}}{{if i < method.parameters.size - 1}}, {{end}}{{end}}{{end}})
+    {
+       Port port = Port.GetCurrent();
+       Call call = port.MakeCall(CallPoint, {{method.index}}{{if method.parameters.size > 0}}{{for i in 0..(method.parameters.size - 1)}}, {{method.parameters[i].name}}{{end}}{{end}});
+       {{~ if method.call_type == 1 || method.call_type == 3 ~}}
+       port.AddCall(call);
+       {{~ else if method.call_type == 2 || method.call_type == 4 ~}}
+       return await port.AddCall<{{method.async_return_type}}>(call);
+       {{~ end ~}}
+    }
+    {{~ end ~}}
+
+    #endregion
+}
