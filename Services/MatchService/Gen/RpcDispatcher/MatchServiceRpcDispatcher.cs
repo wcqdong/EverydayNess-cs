@@ -8,6 +8,8 @@ public class MatchServiceRpcDispatcher : ServiceRpcDispatcherBase
     {
         switch (methodKey)
         {
+            case 1:
+                return EReturnType.OBJECT;
             default:
                 throw new Exception($"MatchServiceProxyDispatcher::GetReturnType 没找到methodKey={methodKey}的rpc函数");
         }
@@ -30,6 +32,8 @@ public class MatchServiceRpcDispatcher : ServiceRpcDispatcherBase
          MatchService serv = (service as MatchService)!;
          switch (methodKey)
          {
+             case 1:
+                 return serv.Test4((int)methodParams[0]);
              default:
                  throw new Exception($"MatchServiceProxyDispatcher::CallObject 没找到methodKey={methodKey}的rpc函数");
          }

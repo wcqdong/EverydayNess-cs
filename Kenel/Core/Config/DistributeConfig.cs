@@ -17,14 +17,18 @@ public class DistributeConfig
     {
         foreach (var item in Nodes)
         {
-            if (item.Value == null || !item.Value.Global.Any())
+            if (item.Value == null)
             {
                 continue;
             }
             string nodeId = item.Key;
             foreach (var item1 in item.Value.Global)
             {
-                string portId = item.Key;
+                if (item1.Value == null)
+                {
+                    continue;
+                }
+                string portId = item1.Key;
                 foreach (var serviceId in item1.Value)
                 {
                     GlobalCallPoints.Add(serviceId, new CallPoint(nodeId, portId, serviceId));
@@ -42,6 +46,7 @@ public class DistributeConfig
 
 public class NodeConfig
 {
+    public string addr;
     public Dictionary<string, int> Normal { get; set; } = new();
     public Dictionary<string, List<string>> Global { get; set; } = new();
 }

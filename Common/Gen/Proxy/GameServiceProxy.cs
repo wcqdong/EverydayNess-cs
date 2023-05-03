@@ -34,28 +34,28 @@ public class GameServiceProxy
     {
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, 1);
-       port.AddCall(call);
+       port.SendCall(call);
     }
 
     public async Task<string> Test2(int a, string b)
     {
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, 2, a, b);
-       return await port.AddCall<string>(call);
+       return await port.SendCall<string>(call);
     }
 
     public async Task<string> Test3(int a, string b)
     {
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, 3, a, b);
-       return await port.AddCall<string>(call);
+       return await port.SendCall<string>(call);
     }
 
     public async Task<string> Test4(int a, string b)
     {
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, 4, a, b);
-       return await port.AddCall<string>(call);
+       return await port.SendCall<string>(call);
     }
 
     #endregion

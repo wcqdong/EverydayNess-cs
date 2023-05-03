@@ -24,7 +24,7 @@ public class SceneService : Service
 
         // TODO callpoint一定来源于一个地方，而不是随意手动创建的
         // TODO 比如逻辑服玩家一定持有场景服玩家的一个callpoint，操作场景玩家即对一个callpint进行rpc
-        string toNodeId = Port.GetCurrent().Node.NodeId;
+        string toNodeId = "node1";
         string toPortId = "game0";
         string toServiceId = "game";
         CallPoint _sceneCallPoint = new CallPoint(toNodeId, toPortId, toServiceId);
@@ -40,7 +40,11 @@ public class SceneService : Service
 
         CoreUtils.WriteLine($"{ServiceId}::Test1  ---调用-->  {_gameServiceProxy.CallPoint}::Test2");
         string result = await _gameServiceProxy.Test2(i, s);
+        CoreUtils.WriteLine($"{ServiceId}::Test1 收到 gameService的返回");
 
+        CoreUtils.WriteLine($"{ServiceId}::Test1  ---调用-->  {MatchServiceProxy.Inst.CallPoint}::Test4");
+        string aaa = await MatchServiceProxy.Inst.Test4(6);
+        CoreUtils.WriteLine($"{ServiceId}::Test1 收到 MatchService的返回值 {aaa}");
         return result;
     }
 

@@ -40,5 +40,12 @@ public class MatchServiceProxy
 
     #region RPC
 
+    public async Task<string> Test4(int a)
+    {
+       Port port = Port.GetCurrent();
+       Call call = port.MakeCall(CallPoint, 1, a);
+       return await port.SendCall<string>(call);
+    }
+
     #endregion
 }

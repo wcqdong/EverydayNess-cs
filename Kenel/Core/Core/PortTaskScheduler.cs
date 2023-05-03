@@ -15,7 +15,7 @@ public class PortTaskScheduler : TaskScheduler
         // 放入回调
         _port.AddCallback(Call!, task);
         // 交给线程调度
-        _port.Dispatch(Call!);
+        _port.SendCall(Call!);
         // 清理Call
         Call = null;
     }

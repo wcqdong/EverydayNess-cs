@@ -34,42 +34,42 @@ public class SceneServiceProxy
     {
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, 1, i, s);
-       return await port.AddCall<string>(call);
+       return await port.SendCall<string>(call);
     }
 
     public void Test3(int i, string s)
     {
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, 2, i, s);
-       port.AddCall(call);
+       port.SendCall(call);
     }
 
     public void t1(int i, string s)
     {
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, 3, i, s);
-       port.AddCall(call);
+       port.SendCall(call);
     }
 
     public async Task<string> t2(int i, string s)
     {
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, 4, i, s);
-       return await port.AddCall<string>(call);
+       return await port.SendCall<string>(call);
     }
 
     public void t3(int i, string s)
     {
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, 5, i, s);
-       port.AddCall(call);
+       port.SendCall(call);
     }
 
     public async Task<string> t4(int i, string s)
     {
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, 6, i, s);
-       return await port.AddCall<string>(call);
+       return await port.SendCall<string>(call);
     }
 
     #endregion

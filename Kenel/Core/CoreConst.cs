@@ -13,6 +13,12 @@ public class CoreConst
     public static readonly int CallbackTimeout = 30000;
 
     /// <summary>
+    /// 发送call缓冲区大小
+    /// </summary>
+    public static readonly int CALL_BUFFER_SIZE = 2 * 1024 * 1024;
+
+
+    /// <summary>
     /// 工程根目录
     /// </summary>
     public static readonly string BaseDir = $"{AppContext.BaseDirectory}../../../../";

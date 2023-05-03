@@ -12,9 +12,12 @@ public class GameService : Service
 
     private SceneServiceProxy _sceneServiceProxy;
 
-    private readonly int SendMaxCount = 10000;
+    private readonly int SendMaxCount = 1;
     private int _sendCount = 0;
-    private int _loopCount = 1000;
+    private int _loopCount = 1;
+
+    private int _curFrams = 0;
+    private int _delayFrams = 500;
     public GameService(string serviceId) : base(serviceId)
     {
 
@@ -29,7 +32,7 @@ public class GameService : Service
 
         // TODO callpoint一定来源于一个地方，而不是随意手动创建的
         // TODO 比如逻辑服玩家一定持有场景服玩家的一个callpoint，操作场景玩家即对一个callpint进行rpc
-        string toNodeId = Port.GetCurrent().Node.NodeId;
+        string toNodeId = "node2";
         string toPortId = "scene0";
         string toServiceId = "scene";
         CallPoint _sceneCallPoint = new CallPoint(toNodeId, toPortId, toServiceId);
@@ -41,9 +44,13 @@ public class GameService : Service
     {
         base.Tick(now);
 
+        // if (++_curFrams < _delayFrams)
+        // {
+        //     return;
+        // }
+
         if (_sceneServiceProxy != null && _sendCount < SendMaxCount)
         {
-
             _sendCount++;
             for (int i = 0; i < _loopCount; i++)
             {

@@ -59,9 +59,9 @@ public class {{record.name}}Proxy
        Port port = Port.GetCurrent();
        Call call = port.MakeCall(CallPoint, {{method.index}}{{if method.parameters.size > 0}}{{for i in 0..(method.parameters.size - 1)}}, {{method.parameters[i].name}}{{end}}{{end}});
        {{~ if method.call_type == 1 || method.call_type == 3 ~}}
-       port.AddCall(call);
+       port.SendCall(call);
        {{~ else if method.call_type == 2 || method.call_type == 4 ~}}
-       return await port.AddCall<{{method.async_return_type}}>(call);
+       return await port.SendCall<{{method.async_return_type}}>(call);
        {{~ end ~}}
     }
     {{~ end ~}}

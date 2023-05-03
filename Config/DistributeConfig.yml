@@ -1,9 +1,9 @@
 nodes:
   node1: # 节点名称，即进程名称
-
+    addr: tcp://127.0.0.1:15001
     normal: # 状态服务的配置
-      game: 10 # 启动10个线程的game线程，分别为game1、game2、game3……
-      scene: 5
+      game: 1 # 启动10个线程的game线程，分别为game1、game2、game3……
+      # scene: 5
     
     global: # 有状态服务的配置
       global1: # 线程名，一个global1线程下可以启动多个服务
@@ -17,18 +17,19 @@ nodes:
 
 
   node2: # 因为local：world1，所以该节点为远程节点，以后用服务发现的工具管理服务
+    addr: tcp://127.0.0.1:15002
     # 无状态服务
     normal:
-      game: 10
+      # game: 10
       scene: 5
 
     # 有状态服务
     global:
       global1: 
         # - union
-        - team
-        - sceneGlobal
+        # - team
+        # - sceneGlobal
       global2:
-        - chat
-        - match
+        # - chat
+        # - match
 

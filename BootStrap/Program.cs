@@ -32,9 +32,12 @@ class Program
         // step4. 构建分布式
         // --------------------------
         // step4.1 构建本地Node
-        BuildDistributeLocal(assemblies);
+        // 创建一个进程节点
+        NodeConfig nodeConfig = DistributeConfig.GetLocalNode();
+        Node node = new Node(DistributeConfig.Inst.Local, nodeConfig.addr);
+        BuildDistributeLocal(node, assemblies);
         // step4.2 构建分布式Node
-        BuildDistributeGlobal();
+        BuildDistributeGlobal(node);
 
         // TODO step5. 监听关闭
         // --------------------------
@@ -45,6 +48,7 @@ class Program
     public static void LoadDistributeConfig(string filePath)
     {
         DistributeConfig.Inst = YamlUtils.Load<DistributeConfig>(filePath);
+        DistributeConfig.Inst.Init();
     }
 
     private static void InitAssembly()
@@ -105,7 +109,7 @@ class Program
         }
     }
 
-    private static void BuildDistributeGlobal()
+    private static void BuildDistributeGlobal(Node node)
     {
         // TODO 构建分布式关系，现在通过本地配置构建分布式，以后通过服务发现实现
         foreach (var item in DistributeConfig.Inst.Nodes)
@@ -115,15 +119,16 @@ class Program
                 continue;
             }
             // TODO 构建分布式
+            string remoteNodeId = item.Key;
+            NodeConfig remoteNodeConfig = item.Value;
 
+            RemoteNode remoteNode = new RemoteNode(node, remoteNodeId, remoteNodeConfig.addr);
+            node.AddRemoteNode(remoteNode);
         }
     }
 
-    private static void BuildDistributeLocal(Dictionary<string, Assembly> assemblies)
+    private static void BuildDistributeLocal(Node node, Dictionary<string, Assembly> assemblies)
     {
-        // 创建一个进程节点
-        Node node = new Node(DistributeConfig.Inst.Local);
-
         // 获得所有Service工程
         DirectoryInfo dir = new DirectoryInfo($"{CoreConst.BaseDir}Services");
         DirectoryInfo[] dirs = dir.GetDirectories("*Service");
@@ -161,9 +166,7 @@ class Program
             }
         }
 
-
-
-        // TODO Node.StartUp() 用来启动
+        node.StartUp();
     }
 
     private static bool AddService(Port port, string shortName, DirectoryInfo[] dirs, Dictionary<string, Assembly> assemblies)

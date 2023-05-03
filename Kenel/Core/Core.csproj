@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Google.Protobuf" Version="3.23.0-rc2" />
+      <PackageReference Include="NetMQ" Version="4.0.1.12" />
+    </ItemGroup>
+
 </Project>

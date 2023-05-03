@@ -1,3 +1,5 @@
+// #define PRINT
+
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using ConsoleApp63;
@@ -19,9 +21,9 @@ public class Port : IThread
     private Stopwatch _watch = new();
 
 
-    private uint callbackId;
+    private int callbackId;
 
-    private Dictionary<uint, CallBack> _callBacks = new();
+    private Dictionary<int, CallBack> _callBacks = new();
 
     private ConcurrentQueue<Call> _calls = new ();
 
@@ -33,11 +35,12 @@ public class Port : IThread
 
     private long _now;
 
-    // private Call? _during;
-
     private Dictionary<object, Service> _services = new();
 
     private readonly ConcurrentQueue<Action> tasks = new();
+    private readonly List<Action> _affirmedTasks = new();
+
+    private readonly Dictionary<string, CallFrameBuffer> _callFrameBuffers = new();
 
 
     /// <summary>
@@ -87,43 +90,70 @@ public class Port : IThread
 
         // 确认这一帧要处理的call和returnCall
         _watch.Restart();
-        Affirm();
+        AffirmCall();
         _watch.Stop();
-        Console.WriteLine($"{PortId},Affirm,{_watch.ElapsedMilliseconds}");
-
+#if PRINT
+        Console.WriteLine($"{PortId},AffirmCall,{_watch.ElapsedMilliseconds}");
+#endif
 
         // 处理calls
         _watch.Restart();
         TickCalls();
         _watch.Stop();
+#if PRINT
         Console.WriteLine($"{PortId},TickCalls,{_watch.ElapsedMilliseconds}");
+#endif
 
         // 处理超时的回调
         _watch.Restart();
         TickCallBackTimeout();
         _watch.Stop();
+#if PRINT
         Console.WriteLine($"{PortId},TickCallBackTimeout,{_watch.ElapsedMilliseconds}");
+#endif
 
         // Tick驱动service
         _watch.Restart();
         TickServices();
         _watch.Stop();
+#if PRINT
         Console.WriteLine($"{PortId},TickServices,{_watch.ElapsedMilliseconds}");
+#endif
 
         // Tick等待任务队列
         _watch.Restart();
-        TickTasks();
+        AffirmTask();
         _watch.Stop();
+#if PRINT
+        Console.WriteLine($"{PortId},AffirmTask,{_watch.ElapsedMilliseconds}");
+#endif
+
+        _watch.Restart();
+        TickTask();
+        _watch.Stop();
+#if PRINT
         Console.WriteLine($"{PortId},TickTasks,{_watch.ElapsedMilliseconds}");
+#endif
 
+        _watch.Restart();
+        FlushCallFrameBuffer();
         _watch.Stop();
+#if PRINT
+        Console.WriteLine($"{PortId},FlushCallFrameBuffer,{_watch.ElapsedMilliseconds}");
+#endif
+    }
 
-
+    private void FlushCallFrameBuffer()
+    {
+        foreach (var item in _callFrameBuffers)
+        {
+            item.Value.Flush(item.Key, Node);
+        }
     }
 
     private void TickCallBackTimeout()
     {
-        List<uint> removeKeys = _callBacks.Where((kv) => _now > kv.Value.timeout).Select((kv) => kv.Key).ToList();
+        List<int> removeKeys = _callBacks.Where((kv) => _now > kv.Value.timeout).Select((kv) => kv.Key).ToList();
         foreach (var removeKey in removeKeys)
         {
             CallBack callBack = _callBacks[removeKey];
@@ -136,9 +166,29 @@ public class Port : IThread
         // }
     }
 
-    private void TickTasks()
+    private void AffirmTask()
     {
+        // while (tasks.TryDequeue(out var task))
+        // {
+        //     try
+        //     {
+        //         task();
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         Console.WriteLine(e);
+        //     }
+        // }
+
         while (tasks.TryDequeue(out var task))
+        {
+            _affirmedTasks.Add(task);
+        }
+    }
+
+    private void TickTask()
+    {
+        foreach (var task in _affirmedTasks)
         {
             try
             {
@@ -149,6 +199,8 @@ public class Port : IThread
                 Console.WriteLine(e);
             }
         }
+
+        _affirmedTasks.Clear();
     }
 
     private void TickServices()
@@ -175,7 +227,7 @@ public class Port : IThread
         {
             if (call.Type == 0)
             {
-                doCall(call);
+                DoCall(call);
             }
             else
             {
@@ -211,7 +263,7 @@ public class Port : IThread
 
     }
 
-    private async void doCall(Call call)
+    private async void DoCall(Call call)
     {
         try
         {
@@ -267,13 +319,13 @@ public class Port : IThread
             result = sourceCall.result,
         };
 
-        AddCall(call);
+        SendCall(call);
     }
 
     /// <summary>
     /// 确认在此帧要执行的call和callResult
     /// </summary>
-    private void Affirm()
+    private void AffirmCall()
     {
         while(_calls.TryDequeue(out var call))
         {
@@ -287,7 +339,7 @@ public class Port : IThread
     }
 
 
-    public Task<T> AddCall<T>(Call call)
+    public Task<T> SendCall<T>(Call call)
     {
         _scheduler.Call = call;
 
@@ -295,9 +347,18 @@ public class Port : IThread
         return task;
     }
 
-    public void AddCall(Call call)
+    public void SendCall(Call call)
     {
-        Dispatch(call);
+        if (!_callFrameBuffers.TryGetValue(call.To.NodeId, out var buffer))
+        {
+            buffer = new CallFrameBuffer();
+            _callFrameBuffers.Add(call.To.NodeId, buffer);
+        }
+
+        if (!buffer.WriteCall(call))
+        {
+            // TODO 长度检查，防止超过缓冲区
+        }
     }
 
     public Call MakeCall(CallPoint callPoint, int methodId, params object[] parameters)
@@ -319,31 +380,6 @@ public class Port : IThread
         // 需要回调则设置callbackId
         call.CallBackId = callbackId++;
         _callBacks.Add(call.CallBackId, new CallBack(call, task));
-    }
-
-    public void Dispatch(Call call)
-    {
-        // // 需要回调则设置callbackId
-        // if (call.NeedResult)
-        // {
-        //     call.CallBackId = callbackId++;
-        //     _callBacks.Add(call.CallBackId, new CallBack(call, task));
-        // }
-        // // 不需要返回，则直接让await代码继续执行
-        // else
-        // {
-        //     _scheduler.CallBack(task);
-        // }
-
-        // 同进程
-        if (Node.NodeId.Equals(call.To.NodeId))
-        {
-            Node.Dispatch(call);
-        }
-        else
-        {
-            // TODO 通过TCP或其他通信方式发送出去
-        }
     }
 
     public void AddQueue(Call call)
