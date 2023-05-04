@@ -1,6 +1,7 @@
 # EverydayNess
 思路推演图
 ![img.png](Imgs/img3.png)
+![img.png](img.png)
 
 # 特点
 * 分布式：rpc快速实现进程和线程间通信
