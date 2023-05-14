@@ -77,7 +77,6 @@ BootStrap为引导程序，BootStrap并不引用Service工程，而是根据Dist
 
 
 
-[2.Rpc.md](doc%2F2.Rpc.md)
 ## 例子
 以创建GameService服为例
 1. 在Services目录下创建GameService程序集
