@@ -77,7 +77,7 @@ BootStrap为引导程序，BootStrap并不引用Service工程，而是根据Dist
 
 
 
-
+[2.Rpc.md](doc%2F2.Rpc.md)
 ## 例子
 以创建GameService服为例
 1. 在Services目录下创建GameService程序集
@@ -91,4 +91,8 @@ DistributeConfig.yml说明
 * 无状态服务：例如场景和逻辑服等可以有多个服务
 
 
+## 详细说明
 
+[1.工程介绍.md](doc%2F1.%E5%B7%A5%E7%A8%8B%E4%BB%8B%E7%BB%8D.md)
+
+[2.Rpc.md](doc%2F2.Rpc.md)

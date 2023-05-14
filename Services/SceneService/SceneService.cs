@@ -45,7 +45,7 @@ public class SceneService : Service
         CoreUtils.WriteLine($"{ServiceId}::Test1  ---调用-->  {MatchServiceProxy.Inst.CallPoint}::Test4");
         string aaa = await MatchServiceProxy.Inst.Test4(6);
         CoreUtils.WriteLine($"{ServiceId}::Test1 收到 MatchService的返回值 {aaa}");
-        return result;
+        return aaa;
     }
 
     [Rpc]

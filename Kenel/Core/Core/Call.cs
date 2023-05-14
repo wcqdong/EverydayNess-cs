@@ -15,7 +15,6 @@ public class Call : ISerialize
     // TO
     public CallPoint To;
 
-
     // 调用的rpc的函数
     public int MethodKey;
     // rpc所需的参数
@@ -23,7 +22,7 @@ public class Call : ISerialize
 
     // 回调
     public int CallBackId;
-
+    // rpc返回的信息
     public object result;
 
 
