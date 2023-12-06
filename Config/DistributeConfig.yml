@@ -32,4 +32,9 @@ nodes:
       global2:
         # - chat
         # - match
+  conn: # 因为local：world1，所以该节点为远程节点，以后用服务发现的工具管理服务
+    addr: tcp://127.0.0.1:15003
+    normal: 
+      conn: 5
+    global:
 

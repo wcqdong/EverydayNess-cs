@@ -28,11 +28,11 @@ public class MatchServiceProxy
 
     public CallPoint CallPoint { get; }
 
-    private MatchServiceProxy(string nodeIdId, string portId, object serviceId)
+    public MatchServiceProxy(string nodeIdId, string portId, object serviceId)
     {
         CallPoint = new CallPoint(nodeIdId, portId, serviceId);
     }
-    private MatchServiceProxy(CallPoint callPoint)
+    public MatchServiceProxy(CallPoint callPoint)
     {
         CallPoint = callPoint;
     }

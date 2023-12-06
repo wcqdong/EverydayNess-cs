@@ -1,9 +1,45 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Common\Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DotNetty.Transport" Version="0.7.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="$(MSBuildThisFileDirectory)Netty\Kcp\KcpCore\kcp.pdb" TargetPath="..\..\BootStrap\net8.0\Netty\Kcp\KcpCore\kcp.pdb">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+        <None Include="$(MSBuildThisFileDirectory)Netty\Kcp\KcpCore\kcp.so" TargetPath="..\..\BootStrap\net8.0\Netty\Kcp\KcpCore\kcp.so">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+        <None Include="$(MSBuildThisFileDirectory)Netty\Kcp\KcpCore\kcp.dll" TargetPath="..\..\BootStrap\net8.0\Netty\Kcp\KcpCore\kcp.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+
+        <None Include="$(MSBuildThisFileDirectory)Netty\Kcp\KcpCore\kcp.pdb" TargetPath="..\..\NettyClient\net8.0\Netty\Kcp\KcpCore\kcp.pdb">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="$(MSBuildThisFileDirectory)Netty\Kcp\KcpCore\kcp.so" TargetPath="..\..\NettyClient\net8.0\Netty\Kcp\KcpCore\kcp.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="$(MSBuildThisFileDirectory)Netty\Kcp\KcpCore\kcp.dll" TargetPath="..\..\NettyClient\net8.0\Netty\Kcp\KcpCore\kcp.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Gen\RpcDispatcher\" />
+    </ItemGroup>
 
 </Project>

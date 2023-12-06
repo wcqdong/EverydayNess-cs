@@ -41,11 +41,11 @@ public class {{record.name}}Proxy
 
     public CallPoint CallPoint { get; }
 
-    private {{record.name}}Proxy(string nodeIdId, string portId, object serviceId)
+    public {{record.name}}Proxy(string nodeIdId, string portId, object serviceId)
     {
         CallPoint = new CallPoint(nodeIdId, portId, serviceId);
     }
-    private {{record.name}}Proxy(CallPoint callPoint)
+    public {{record.name}}Proxy(CallPoint callPoint)
     {
         CallPoint = callPoint;
     }

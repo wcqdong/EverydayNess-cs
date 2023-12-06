@@ -1,0 +1,12 @@
+<Project>
+    <Import Project="../Directory.Build.props" />
+    <PropertyGroup>
+        <!--输出路径不附加$(TargetFramework)属性-->
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <!--设置二进制文件目录-->
+        <OutputPath>$(MSBuildThisFileDirectory)../Bin/Generators/$(MSBuildProjectName)</OutputPath>
+        <!--设置obj文件目录-->
+        <IntermediateOutputPath>$(MSBuildThisFileDirectory)../Build/Generators/$(MSBuildProjectName)</IntermediateOutputPath>
+<!--        <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)../Build/$(MSBuildProjectName)</BaseIntermediateOutputPath>-->
+    </PropertyGroup>
+</Project>

@@ -18,11 +18,11 @@ public class GameServiceProxy
 
     public CallPoint CallPoint { get; }
 
-    private GameServiceProxy(string nodeIdId, string portId, object serviceId)
+    public GameServiceProxy(string nodeIdId, string portId, object serviceId)
     {
         CallPoint = new CallPoint(nodeIdId, portId, serviceId);
     }
-    private GameServiceProxy(CallPoint callPoint)
+    public GameServiceProxy(CallPoint callPoint)
     {
         CallPoint = callPoint;
     }

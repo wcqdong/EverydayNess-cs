@@ -1,6 +1,6 @@
 using Google.Protobuf;
 
-namespace Core.Core;
+namespace Core.Core.Serialize;
 
 public class OutputStream
 {
@@ -11,7 +11,6 @@ public class OutputStream
 
     public OutputStream(byte[] bytes)
     {
-        // TODO 暂时给128，实际应该有个buffer池
         Buffer = bytes;
         MaxLength = bytes.Length;
         Stream = new CodedOutputStream(Buffer);

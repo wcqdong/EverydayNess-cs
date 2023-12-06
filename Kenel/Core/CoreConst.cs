@@ -21,6 +21,6 @@ public class CoreConst
     /// <summary>
     /// 工程根目录
     /// </summary>
-    public static readonly string BaseDir = $"{AppContext.BaseDirectory}../../../../";
+    public static readonly string BaseDir = $"{AppContext.BaseDirectory}../../";
 
 }

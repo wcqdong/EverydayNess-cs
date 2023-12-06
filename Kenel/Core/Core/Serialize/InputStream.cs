@@ -1,7 +1,7 @@
 using Core.Support;
 using Google.Protobuf;
 
-namespace Core.Core;
+namespace Core.Core.Serialize;
 
 public class InputStream
 {

@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Reflection;
+using BootStrap;
 using Core.Attributes;
 using Core.Config;
 using Core.Core;
@@ -18,7 +19,7 @@ class Program
 
         // step1. 分布式配置
         // --------------------------
-        LoadDistributeConfig($"{CoreConst.BaseDir}Config/DistributeConfig.yml");
+        LoadDistributeConfig($"{CoreConst.BaseDir}../Config/DistributeConfig.yml");
         DistributeConfig.Inst.Local = args[0];
 
         // step2. 加载Service程序集
@@ -53,6 +54,7 @@ class Program
 
     private static void InitAssembly()
     {
+        // 收集程序的StartUp启动函数
         List<MethodInfo> startUpMethods = CollectStartup();
 
         foreach (var method in startUpMethods)
@@ -71,16 +73,19 @@ class Program
 
         NodeConfig localNode = DistributeConfig.GetLocalNode();
 
-
-        // 加载有状态服务的Assembly
-        foreach (var shortNames in localNode.Global.Values)
+        if (localNode.Global != null)
         {
-            if (shortNames == null)
+            // 加载有状态服务的Assembly
+            foreach (var shortNames in localNode.Global.Values)
             {
-                continue;
+                if (shortNames == null)
+                {
+                    continue;
+                }
+                LoadServiceAssembly(shortNames, assemblies, dirs);
             }
-            LoadServiceAssembly(shortNames, assemblies, dirs);
         }
+
 
         // 加载无状态服务的Assembly
         LoadServiceAssembly(localNode.Normal.Keys.ToList(), assemblies, dirs);
@@ -99,9 +104,15 @@ class Program
                 if (serviceDirInfo.Name.Equals(fullName))
                 {
 #if DEBUG
-                    assemblies.Add(fullName, Assembly.LoadFrom($"{serviceDirInfo}/bin/Debug/net6.0/{serviceDirInfo.Name}.dll"));
+                    PluginAssemblyLoadContext loadContext = PluginAssemblyLoadContext.LoadPlugin($"{serviceDirInfo}/{serviceDirInfo.Name}.dll",
+                        $"{serviceDirInfo}/{serviceDirInfo.Name}.pdb");
+                    foreach (var assembly in loadContext.Assemblies)
+                    {
+                        assemblies.Add(fullName, assembly);
+                    }
+                    // assemblies.Add(fullName, Assembly.LoadFrom($"{serviceDirInfo}/bin/Debug/net8.0/{serviceDirInfo.Name}.dll"));
 #else
-                    assemblies.Add(fullName, Assembly.LoadFrom($"{serviceDirInfo}/bin/Release/net6.0/{serviceDirInfo.Name}.dll"));
+                    assemblies.Add(fullName, Assembly.LoadFrom($"{serviceDirInfo}/bin/Release/net8.0/{serviceDirInfo.Name}.dll"));
 #endif
                 }
             }

@@ -13,9 +13,9 @@ public class RpcGenerator
     /// <summary>
     /// 模板
     /// </summary>
-    private Template _templateRpcDispatcher;
+    private readonly Template _templateRpcDispatcher;
 
-    private Template _templateServiceProxy;
+    private readonly Template _templateServiceProxy;
 
     public RpcGenerator()
     {
@@ -41,6 +41,10 @@ public class RpcGenerator
 
     private static async Task Render(ServiceRecord record, string fileName, string filePath, Template template)
     {
+        if (!Directory.Exists(filePath))
+        {
+            Directory.CreateDirectory(filePath);
+        }
         string output = $"{filePath}{fileName}";
         await template.WriteAsync(output, new
         {

@@ -1,3 +1,5 @@
+using Core.Core.Serialize;
+
 namespace Core.Core;
 
 public interface ISerialize

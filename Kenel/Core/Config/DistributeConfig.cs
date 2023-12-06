@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Core.Core;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Core.Config;
 
@@ -15,25 +16,29 @@ public class DistributeConfig
 
     public void Init()
     {
-        foreach (var item in Nodes)
+        foreach (var node in Nodes)
         {
-            if (item.Value == null)
+            if (node.Value == null)
             {
                 continue;
             }
-            string nodeId = item.Key;
-            foreach (var item1 in item.Value.Global)
+            string nodeId = node.Key;
+            if (node.Value.Global != null)
             {
-                if (item1.Value == null)
+                foreach (var port in node.Value.Global)
                 {
-                    continue;
-                }
-                string portId = item1.Key;
-                foreach (var serviceId in item1.Value)
-                {
-                    GlobalCallPoints.Add(serviceId, new CallPoint(nodeId, portId, serviceId));
+                    if (port.Value == null)
+                    {
+                        continue;
+                    }
+                    string portId = port.Key;
+                    foreach (var serviceId in port.Value)
+                    {
+                        GlobalCallPoints.Add(serviceId, new CallPoint(nodeId, portId, serviceId));
+                    }
                 }
             }
+
         }
     }
 
@@ -48,7 +53,13 @@ public class NodeConfig
 {
     public string addr;
     public Dictionary<string, int> Normal { get; set; } = new();
-    public Dictionary<string, List<string>> Global { get; set; } = new();
+    private Dictionary<string, List<string>> _global;
+    public Dictionary<string, List<string>> Global
+    {
+        get => _global != null ? _global : new Dictionary<string, List<string>>();
+        set => _global = value;
+    }
+
 }
 
 // public class StatelessConfig

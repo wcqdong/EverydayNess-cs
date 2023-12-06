@@ -1,10 +1,12 @@
+using Core.Core.Serialize;
+
 namespace Core.Core;
 
 public class CallPoint : ISerialize
 {
-    public string NodeId { get; set; }
-    public string PortId{ get; set; }
-    public object ServiceId{ get; set; }
+    public string NodeId { get; set; } = null!;
+    public string PortId{ get; set; } = null!;
+    public object ServiceId{ get; set; } = null!;
 
     public CallPoint()
     {

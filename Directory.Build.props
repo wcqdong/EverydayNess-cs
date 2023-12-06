@@ -1,0 +1,22 @@
+<Project>
+    <PropertyGroup>
+<!--        <treatwarningsaserrors>true</treatwarningsaserrors>-->
+        <warninglevel>4</warninglevel>
+        <LangVersion>latest</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Prefer32Bit>false</Prefer32Bit>
+        <DefaultItemExcludes>$(DefaultItemExcludes);*.DotSettings;*.ncrunchproject</DefaultItemExcludes>
+        <OutputPath>$(MSBuildThisFileDirectory)Bin\$(MSBuildProjectName)</OutputPath>
+        <IntermediateOutputPath>$(MSBuildThisFileDirectory)Build\$(MSBuildProjectName)</IntermediateOutputPath>
+    </PropertyGroup>
+    <PropertyGroup>
+        <WarningsNotAsErrors>0618</WarningsNotAsErrors>
+    </PropertyGroup>
+    <PropertyGroup>
+        <PackageOutputPath>$(SolutionDir)nugets</PackageOutputPath>
+    </PropertyGroup>
+<!--    场景测试条件编译-->
+<!--    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">-->
+<!--        <DefineConstants>ENABLE_SCENE_TEST</DefineConstants>-->
+<!--    </PropertyGroup>-->
+</Project>

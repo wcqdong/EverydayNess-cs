@@ -23,13 +23,12 @@ public class CoreUtils
         DirectoryInfo[] dirs = dirInfo.GetDirectories(pattern);
 
         // 加载有状态服务的Assembly
-
         foreach (var serviceDirInfo in dirs)
         {
 #if DEBUG
-            assemblies.Add(serviceDirInfo.Name, Assembly.LoadFrom($"{serviceDirInfo}/bin/Debug/net6.0/{serviceDirInfo.Name}.dll"));
+            assemblies.Add(serviceDirInfo.Name, Assembly.LoadFrom($"{serviceDirInfo}/bin/Debug/net8.0/{serviceDirInfo.Name}.dll"));
 #else
-            assemblies.Add(serviceDirInfo.Name, Assembly.LoadFrom($"{serviceDirInfo}/bin/Release/net6.0/{serviceDirInfo.Name}.dll"));
+            assemblies.Add(serviceDirInfo.Name, Assembly.LoadFrom($"{serviceDirInfo}/bin/Release/net8.0/{serviceDirInfo.Name}.dll"));
 #endif
         }
 

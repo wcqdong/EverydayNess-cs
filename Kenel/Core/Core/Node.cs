@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using Core.Core.Serialize;
 using Core.Support;
 using Core.Utils;
 using NetMQ;
