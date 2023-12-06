@@ -1,5 +1,7 @@
 using System.Net;
 using System.Runtime.InteropServices;
+using ConnService;
+using ConnService.Netty;
 using ConnService.Netty.Kcp.KcpCore;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;

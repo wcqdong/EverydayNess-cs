@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using ConnService;
+using ConnService.Netty;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;

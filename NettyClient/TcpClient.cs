@@ -1,5 +1,7 @@
 using System.Net;
 using System.Text;
+using ConnService;
+using ConnService.Netty;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Transport.Bootstrapping;

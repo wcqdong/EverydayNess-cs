@@ -1,4 +1,4 @@
-namespace NettyClient;
+namespace ConnService.Netty;
 
 public static class NetStat
     {
