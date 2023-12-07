@@ -4,7 +4,7 @@ namespace NettyClient;
 
 public class KcpClientConfig
 {
-    public static readonly int ConnectNum = 8;
+    public static readonly int ConnectNum = 1000;
     public static readonly List<IChannel> ConnectChannels = new();
     public static string Host = "127.0.0.1";
     // public static string Host = "10.0.3.37";

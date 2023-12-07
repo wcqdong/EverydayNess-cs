@@ -89,9 +89,6 @@ public class KcpClientChannel
             return;
         }
 
-        NetStat.IncReceiveCount(1);
-        NetStat.IncReceiveBytes(msg.Content.ReadableBytes);
-
         while (true)
         {
             var size = _kcp.PeekSize();
@@ -104,6 +101,9 @@ public class KcpClientChannel
             var readBytes = _kcp.Recv(buffer.GetIoBuffer(buffer.WriterIndex, size));
             // 设置写索引
             buffer.SetWriterIndex(readBytes);
+
+            NetStat.IncReceiveCount(1);
+            NetStat.IncReceiveBytes(readBytes);
         }
     }
 

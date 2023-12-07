@@ -25,7 +25,7 @@ public class RpcGenerator
 
     public void Gen()
     {
-        Dictionary<string, Assembly> assemblies = CoreUtils.LoadServiceAssemblies($"{GeneratorConst.BaseDir}Services", "*Service");
+        Dictionary<string, Assembly> assemblies = CoreUtils.LoadServiceAssemblies($"{GeneratorConst.BaseDir}Bin/Services", "*Service");
 
         List<ServiceRecord> serviceRecords = CollectRecord(assemblies);
 

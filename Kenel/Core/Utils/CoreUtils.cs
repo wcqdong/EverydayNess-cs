@@ -26,9 +26,10 @@ public class CoreUtils
         foreach (var serviceDirInfo in dirs)
         {
 #if DEBUG
-            assemblies.Add(serviceDirInfo.Name, Assembly.LoadFrom($"{serviceDirInfo}/bin/Debug/net8.0/{serviceDirInfo.Name}.dll"));
+            assemblies.Add(serviceDirInfo.Name, Assembly.LoadFrom($"{serviceDirInfo}/{serviceDirInfo.Name}.dll"));
+            // assemblies.Add(serviceDirInfo.Name, Assembly.LoadFrom($"{serviceDirInfo}/bin/Debug/net8.0/{serviceDirInfo.Name}.dll"));
 #else
-            assemblies.Add(serviceDirInfo.Name, Assembly.LoadFrom($"{serviceDirInfo}/bin/Release/net8.0/{serviceDirInfo.Name}.dll"));
+            assemblies.Add(serviceDirInfo.Name, Assembly.LoadFrom($"{serviceDirInfo}/{serviceDirInfo.Name}.dll"));
 #endif
         }
 

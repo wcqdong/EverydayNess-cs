@@ -8,16 +8,16 @@ public class KcpHandler : ChannelHandlerAdapter
 
     public override void ChannelRead(IChannelHandlerContext context, object message)
     {
-        NetStat.IncReceiveCount(1);
-
         DatagramMessage msg = (DatagramMessage)message;
 
-        NetStat.IncReceiveBytes(msg.Buffer.ReadableBytes);
+        int bytes = msg.Buffer.ReadableBytes;
+        NetStat.IncReceiveCount(1);
+        NetStat.IncReceiveBytes(bytes);
 
         // 写回客户端
-        context.Channel.WriteAsync(msg.Buffer);
+        context.Channel.WriteAndFlushAsync(msg.Buffer);
 
         NetStat.IncSendCount(1);
-        NetStat.IncSendBytes(msg.Buffer.ReadableBytes);
+        NetStat.IncSendBytes(bytes);
     }
 }

@@ -4,7 +4,7 @@ public class GeneratorConst
 {
     private static readonly string AppDir = AppContext.BaseDirectory.TrimEnd('/', '\\');
 
-    public static readonly string BaseDir = $"{AppDir}/../../../../../";
+    public static readonly string BaseDir = $"{AppDir}/../../../";
 
 
     /// <summary>

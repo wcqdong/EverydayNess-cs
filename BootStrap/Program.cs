@@ -112,7 +112,13 @@ class Program
                     }
                     // assemblies.Add(fullName, Assembly.LoadFrom($"{serviceDirInfo}/bin/Debug/net8.0/{serviceDirInfo.Name}.dll"));
 #else
-                    assemblies.Add(fullName, Assembly.LoadFrom($"{serviceDirInfo}/bin/Release/net8.0/{serviceDirInfo.Name}.dll"));
+                    PluginAssemblyLoadContext loadContext = PluginAssemblyLoadContext.LoadPlugin($"{serviceDirInfo}/{serviceDirInfo.Name}.dll",
+                        $"{serviceDirInfo}/{serviceDirInfo.Name}.pdb");
+                    foreach (var assembly in loadContext.Assemblies)
+                    {
+                        assemblies.Add(fullName, assembly);
+                    }
+                    // assemblies.Add(fullName, Assembly.LoadFrom($"{serviceDirInfo}/bin/Release/net8.0/{serviceDirInfo.Name}.dll"));
 #endif
                 }
             }
