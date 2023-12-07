@@ -10,7 +10,7 @@ public class KcpChannelOption
 
 public class KcpOptions
 {
-    public static TimeSpan UpdateTime = TimeSpan.FromMilliseconds(10);
+    public int UpdateTime = 10;
 
     public int Mtu = 1400;
 

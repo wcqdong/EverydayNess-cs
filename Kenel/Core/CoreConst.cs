@@ -1,4 +1,4 @@
-namespace Core.Support;
+namespace Core;
 
 public class CoreConst
 {
@@ -15,7 +15,7 @@ public class CoreConst
     /// <summary>
     /// 发送call缓冲区大小
     /// </summary>
-    public static readonly int CALL_BUFFER_SIZE = 2 * 1024 * 1024;
+    public const int CALL_BUFFER_SIZE = 2 * 1024 * 1024;
 
 
     /// <summary>

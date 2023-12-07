@@ -8,7 +8,7 @@ using DotNetty.Transport.Channels;
 
 namespace ConnService.Netty.Kcp.KcpCore;
 
-public class KcpServerBootstrap : AbstractBootstrap<KcpServerBootstrap, IServerChannel>
+public class KcpServerBootstrap : AbstractBootstrap<KcpServerBootstrap, KcpServerSocketChannel>
 {
     private static readonly IInternalLogger Logger = InternalLoggerFactory.GetInstance<ServerBootstrap>();
 
@@ -17,18 +17,27 @@ public class KcpServerBootstrap : AbstractBootstrap<KcpServerBootstrap, IServerC
 
     private volatile IChannelHandler _childHandler;
 
-    public KcpServerBootstrap()
+    private readonly List<KcpServerSocketChannel> _channels = new();
+
+    private int _interval;
+
+    public KcpServerBootstrap(int interval = 10)
     {
+        _interval = interval;
         _childOptions = new ConcurrentDictionary<ChannelOption, ChannelOptionValue>();
         _childAttrs = new ConcurrentDictionary<IConstant, AttributeValue>();
+
+        StartTick();
     }
 
     private KcpServerBootstrap(KcpServerBootstrap bootstrap)
         : base(bootstrap)
     {
+        _interval = bootstrap._interval;
         _childHandler = bootstrap._childHandler;
         _childOptions = new ConcurrentDictionary<ChannelOption, ChannelOptionValue>(bootstrap._childOptions);
         _childAttrs = new ConcurrentDictionary<IConstant, AttributeValue>(bootstrap._childAttrs);
+        StartTick();
     }
     
     public override KcpServerBootstrap Group(IEventLoopGroup group)
@@ -65,6 +74,8 @@ public class KcpServerBootstrap : AbstractBootstrap<KcpServerBootstrap, IServerC
             ch.Pipeline.AddLast(new KcpServerBootstrapAcceptor(currentChildHandler,
                 currentChildOptions, currentChildAttrs));
         }));
+
+        _channels.Add((KcpServerSocketChannel)channel);
     }
 
     public KcpServerBootstrap ChildOption<T>(ChannelOption<T> childOption, T value)
@@ -105,6 +116,24 @@ public class KcpServerBootstrap : AbstractBootstrap<KcpServerBootstrap, IServerC
         _childHandler = childHandler;
         
         return this;
+    }
+
+    private void StartTick()
+    {
+        new Thread(() =>
+        {
+            while (true)
+            {
+                foreach (var channel in _channels)
+                {
+                    channel.EventLoop.Execute(() =>
+                    {
+                        channel.Tick();
+                    });
+                }
+                Thread.Sleep(_interval);
+            }
+        }).Start();
     }
     
     private class KcpServerBootstrapAcceptor : ChannelHandlerAdapter

@@ -8,25 +8,21 @@ public class KcpServer : SocketServer
 {
     public void Start()
     {
-        _ = RunKcpServer();
-    }
-
-    public static int KcpOutput(IntPtr buf, int len, IntPtr kcp, IntPtr user)
-    {
-
-        return 1;
+        RunKcpServer().Wait();
     }
 
     private async Task RunKcpServer()
     {
-        KcpServerBootstrap bootstrap = new KcpServerBootstrap();
+        KcpOptions kcpOptions = new KcpOptions();
+
+        KcpServerBootstrap bootstrap = new KcpServerBootstrap(kcpOptions.UpdateTime);
 
         MultithreadEventLoopGroup group = new MultithreadEventLoopGroup(KcpConfig.Ports.Count);
         bootstrap.Group(group)
             .ChannelFactory(() => new KcpServerSocketChannel())
             .Option(ChannelOption.SoReuseaddr, true)
             .Option(ChannelOption.SoBacklog, 2048)
-            .ChildOption(KcpChannelOption.KcpOptions, new KcpOptions())
+            .ChildOption(KcpChannelOption.KcpOptions, kcpOptions)
             ;
 
         // handler
@@ -37,8 +33,9 @@ public class KcpServer : SocketServer
 
         foreach (var port in KcpConfig.Ports)
         {
-            IChannel channel = await bootstrap.BindAsync(IPAddress.Parse(KcpConfig.Host), port);
-            Console.WriteLine($"Netty Bind Port {port}");
+            await bootstrap.BindAsync(IPAddress.Parse(KcpConfig.Host), port);
+            Console.WriteLine($"Listen on {KcpConfig.Host}:{port}");
         }
+
     }
 }

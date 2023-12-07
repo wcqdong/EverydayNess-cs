@@ -14,7 +14,7 @@ public class KcpSocketChannel : AbstractChannel
 
     public KcpAgent Kcp { get; }
 
-    public KcpOutput _kcpOutput;
+    private readonly KcpOutput _kcpOutput;
 
     private readonly KcpState _state;
 

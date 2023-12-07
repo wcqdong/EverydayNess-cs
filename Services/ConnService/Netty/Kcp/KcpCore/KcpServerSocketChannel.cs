@@ -15,8 +15,6 @@ public class KcpServerSocketChannel : SocketDatagramChannel, IServerChannel
 
     private readonly IInternalLogger _logger = InternalLoggerFactory.GetInstance<KcpServerSocketChannel>();
 
-    private uint _lastUpdateTime;
-
     public KcpServerSocketChannel() : base(new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
     {
     }
@@ -38,9 +36,7 @@ public class KcpServerSocketChannel : SocketDatagramChannel, IServerChannel
     {
         base.DoRegister();
 
-        _lastUpdateTime = KcpUtils.GetTick();
-
-        EventLoop.Schedule(Pulse, KcpOptions.UpdateTime);
+        // EventLoop.Schedule(Pulse, KcpOptions.UpdateTime);
     }
 
     protected override int DoReadMessages(List<object> buf)
@@ -120,17 +116,13 @@ public class KcpServerSocketChannel : SocketDatagramChannel, IServerChannel
 
     #region KCP
 
-    private void Pulse()
+    public void Tick()
     {
-        var inow = KcpUtils.GetTick();
-        KeepLive(inow);
-        Update(inow);
-
-        if (Active)
-        {
-            _lastUpdateTime = inow;
-            EventLoop.Schedule(Pulse, KcpOptions.UpdateTime);
-        }
+        if (!Active)
+            return;
+        var iNow = KcpUtils.GetTick();
+        KeepLive(iNow);
+        Update(iNow);
     }
 
     private void KeepLive(uint inow)

@@ -7,17 +7,26 @@ namespace ConnService.Netty.Kcp;
 /// </summary>
 public class KcpConfig : KcpOptions
 {
-    public static string Host = "127.0.0.1";
+    public static string Host = "0.0.0.0";
+    // public static string Host = "127.0.0.1";
 
     public static List<int> Ports = new()
     {
-        7001,
-        7002,
-        7003,
-        7004,
-        7005,
-        7006,
-        7007,
-        7008,
+        7500,
+        7501,
+        7502,
+        7503,
+        7504,
+        7505,
+        7506,
+        7507,
+        7508,
+        7509,
+        // 7510,
+        // 7511,
+        // 7512,
+        // 7513,
+        // 7514,
+        // 7515,
     };
 }

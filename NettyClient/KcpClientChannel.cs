@@ -14,7 +14,7 @@ public class KcpClientChannel
 
     public uint Conv;
 
-    private IPEndPoint _removeAddr;
+    public IPEndPoint RemoteAddr;
 
     private readonly KcpOutput _kcpOutput;
 
@@ -26,7 +26,7 @@ public class KcpClientChannel
 
     public KcpClientChannel(IPEndPoint ipEndPoint)
     {
-        _removeAddr = ipEndPoint;
+        RemoteAddr = ipEndPoint;
 
         _kcpOutput = KcpOutput;
     }
@@ -40,14 +40,14 @@ public class KcpClientChannel
         Marshal.Copy(buf, writeBuffer.Array, writeBuffer.Offset, len);
         buffer.SetWriterIndex(buffer.WriterIndex + len);
 
-        Channel.WriteAndFlushAsync(new DatagramPacket(buffer, _removeAddr));
+        Channel.WriteAndFlushAsync(new DatagramPacket(buffer, RemoteAddr));
 
         return len;
     }
 
     public void WriteAndFlushAsync(IByteBuffer buffer)
     {
-        Channel.WriteAndFlushAsync(new DatagramPacket(buffer, _removeAddr));
+        Channel.WriteAndFlushAsync(new DatagramPacket(buffer, RemoteAddr));
     }
 
     public bool IsConnect()
@@ -77,8 +77,6 @@ public class KcpClientChannel
         _kcp.SetMtu(KcpOptions.Mtu);
         _kcp.SetStream(KcpOptions.StreamMode);
         _kcp.WndSize(KcpOptions.SndWnd, KcpOptions.RcvWnd);
-
-        Console.WriteLine($"[{conv}] 连接成功");
 
     }
 

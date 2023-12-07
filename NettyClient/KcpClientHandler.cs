@@ -37,6 +37,9 @@ public class KcpClientHandler : SimpleChannelInboundHandler<DatagramPacket>
         message.WriteByte(KcpConst.Syn);
 
         kcpChannel.WriteAndFlushAsync(message);
+
+        Console.WriteLine($"{kcpChannel.RemoteAddr} connecting……");
+
     }
 
     [SuppressMessage("ReSharper.DPA", "DPA0000: DPA issues")]
@@ -78,6 +81,8 @@ public class KcpClientHandler : SimpleChannelInboundHandler<DatagramPacket>
             }
             uint conv = (uint)msg.Content.ReadIntLE();
             kcpChannel.Connect(conv);
+
+            Console.WriteLine($"[{conv}] 连接成功");
 
             kcpChannel.Schedule(SendPacket, TimeSpan.FromMilliseconds(500));
             kcpChannel.Schedule(KcpUpdate, TimeSpan.FromMilliseconds(kcpChannel.KcpOptions.Interval));
