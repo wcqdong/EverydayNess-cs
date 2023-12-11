@@ -124,8 +124,9 @@ public class KcpServerBootstrap : AbstractBootstrap<KcpServerBootstrap, KcpServe
         {
             while (true)
             {
-                foreach (var channel in _channels)
+                for (int i = 0; i < _channels.Count; ++i)
                 {
+                    KcpServerSocketChannel channel = _channels[i];
                     channel.EventLoop.Execute(() =>
                     {
                         channel.Tick();

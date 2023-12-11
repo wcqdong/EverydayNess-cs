@@ -75,7 +75,7 @@ public class KcpClientHandler : SimpleChannelInboundHandler<DatagramPacket>
         if (!kcpChannel.IsConnect())
         {
             byte syn = msg.Content.ReadByte();
-            if (syn != KcpConst.Syn)
+            if (syn != KcpConst.Ack)
             {
                 return;
             }

@@ -63,7 +63,7 @@ public class KcpState
     {
         //conv的值不同, 不然可以用一块固定内存
         var buffer = _socketChannel.Allocator.Buffer(sizeof(byte) + sizeof(uint));
-        buffer.WriteByte(KcpConst.Syn);
+        buffer.WriteByte(KcpConst.Ack);
         buffer.WriteIntLE(unchecked((int)_socketChannel.Conv));
         _socketChannel.Parent.WriteAndFlushAsync(new DatagramPacket(buffer, _socketChannel.RemoteAddress));
     }
