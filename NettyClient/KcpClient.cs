@@ -1,6 +1,8 @@
 ﻿using System.Net;
-using ConnService;
+using Common.Utils;
 using ConnService.Netty;
+using Core;
+using Core.Utils;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
@@ -12,13 +14,17 @@ public class KcpClient
 
     public static void Start()
     {
-        NetStat.Start();
+        KcpClientConfig.Inst = YamlUtils.Load<KcpClientConfig>($"{CoreConst.BaseDir}../Config/NettyClient.yml");
+        if (KcpClientConfig.Inst.NetStat)
+        {
+            NetStat.Start();
+        }
         RunClientAsync().Wait();
     }
 
     static async Task RunClientAsync()
     {
-        var group = new MultithreadEventLoopGroup(KcpClientConfig.LoopNum);
+        var group = new MultithreadEventLoopGroup(KcpClientConfig.Inst.LoopNum);
         try
         {
             var bootstrap = new Bootstrap();
@@ -32,15 +38,15 @@ public class KcpClient
                     pipeline.AddLast("echo", new KcpClientHandler());
                 }));
 
-            for (var i = 0; i < KcpClientConfig.ConnectNum; ++i)
+            for (var i = 0; i < KcpClientConfig.Inst.ConnectNum; ++i)
             {
                 IChannel clientChannel = await bootstrap.BindAsync(IPEndPoint.MinPort);
-                KcpClientConfig.ConnectChannels.Add(clientChannel);
+                KcpClientConfig.Inst.ConnectChannels.Add(clientChannel);
             }
 
             Console.ReadLine();
 
-            foreach (var channel in KcpClientConfig.ConnectChannels)
+            foreach (var channel in KcpClientConfig.Inst.ConnectChannels)
             {
                 await channel.CloseAsync();
             }

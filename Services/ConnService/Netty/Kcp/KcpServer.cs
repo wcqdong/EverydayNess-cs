@@ -17,7 +17,7 @@ public class KcpServer : SocketServer
 
         KcpServerBootstrap bootstrap = new KcpServerBootstrap(kcpOptions.UpdateTime);
 
-        MultithreadEventLoopGroup group = new MultithreadEventLoopGroup(KcpConfig.Ports.Count);
+        MultithreadEventLoopGroup group = new MultithreadEventLoopGroup(KcpConfig.Inst.Ports.Count);
         bootstrap.Group(group)
             .ChannelFactory(() => new KcpServerSocketChannel())
             .Option(ChannelOption.SoReuseaddr, true)
@@ -31,10 +31,10 @@ public class KcpServer : SocketServer
             channel.Pipeline.AddLast("KcpHandler", new KcpHandler());
         }));
 
-        foreach (var port in KcpConfig.Ports)
+        foreach (var port in KcpConfig.Inst.Ports)
         {
-            await bootstrap.BindAsync(IPAddress.Parse(KcpConfig.Host), port);
-            Console.WriteLine($"Listen on {KcpConfig.Host}:{port}");
+            await bootstrap.BindAsync(IPAddress.Parse(KcpConfig.Inst.Host), port);
+            Console.WriteLine($"Listen on {KcpConfig.Inst.Host}:{port}");
         }
 
     }

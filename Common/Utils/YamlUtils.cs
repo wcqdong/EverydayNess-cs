@@ -1,7 +1,7 @@
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace Core.Utils;
+namespace Common.Utils;
 
 public class YamlUtils
 {

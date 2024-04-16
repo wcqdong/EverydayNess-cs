@@ -4,8 +4,10 @@ using System.Text;
 using ConnService.Netty.Kcp;
 using ConnService.Netty.Kcp.KcpCore;
 using DotNetty.Buffers;
+using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Microsoft.Extensions.Primitives;
 
 namespace NettyClient;
 
@@ -15,14 +17,28 @@ public class KcpClientHandler : SimpleChannelInboundHandler<DatagramPacket>
 
     public KcpClientHandler(): base(true)
     {
-        var port = KcpConfig.Ports[Random.Shared.Next(KcpConfig.Ports.Count)];
-        kcpChannel = new KcpClientChannel(new IPEndPoint(IPAddress.Parse(KcpClientConfig.Host), port));
+        var port = KcpClientConfig.Inst.Ports[Random.Shared.Next(KcpClientConfig.Inst.Ports.Count)];
+        kcpChannel = new KcpClientChannel(new IPEndPoint(IPAddress.Parse(KcpClientConfig.Inst.Host), port));
     }
 
     [SuppressMessage("ReSharper.DPA", "DPA0000: DPA issues")]
     private IByteBuffer GetData()
     {
-        var bytes = Encoding.UTF8.GetBytes(KcpClientConfig.SendData);
+        long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        int random = Random.Shared.Next(1000);
+
+        StringBuilder sbf = new StringBuilder();
+        sbf.Append(now);
+        sbf.Append(random);
+        sbf.Append(KcpClientConfig.Inst.SendData);
+
+        int randomDataLen = Random.Shared.Next(1, KcpClientConfig.Inst.SendDataLengh);
+        for (int i = 0; i < randomDataLen; i++)
+        {
+            sbf.Append(KcpClientConfig.Inst.SendData);
+        }
+
+        var bytes = Encoding.UTF8.GetBytes(sbf.ToString());
         var message = Unpooled.Buffer(bytes.Length);
         message.WriteBytes(bytes);
         return message;
@@ -49,10 +65,10 @@ public class KcpClientHandler : SimpleChannelInboundHandler<DatagramPacket>
         {
             return;
         }
-        var num = KcpClientConfig.SendNum / 2;
+        var num = KcpClientConfig.Inst.SendPerSecond / 2;
         for (var i = 0; i < num; ++i)
         {
-            var buffer = GetData();
+            IByteBuffer buffer = GetData();
 
             // kcp发送
             kcpChannel.Send(buffer.GetIoBuffer());
@@ -60,7 +76,6 @@ public class KcpClientHandler : SimpleChannelInboundHandler<DatagramPacket>
 
         kcpChannel.Schedule(SendPacket, TimeSpan.FromMilliseconds(500));
     }
-
 
     private void KcpUpdate()
     {

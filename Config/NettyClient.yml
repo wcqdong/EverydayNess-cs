@@ -1,0 +1,16 @@
+host: 127.0.0.1
+ports:
+  - 7500
+  - 7501
+  - 7502
+  - 7503
+  - 7504
+  - 7505
+
+connectNum: 100
+loopNum: 8
+sendPerSecond: 20
+sendData: Hello world, The program sets up a 256 bit key and a 128 bit IV. This is appropriate for the 256-bit AES encryption that we going to be doing in CBC mode
+sendDataLengh: 5
+
+netStat: false
