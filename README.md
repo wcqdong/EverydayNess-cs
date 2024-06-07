@@ -25,6 +25,7 @@
 因为使用C#开发，C#的协程（async、await、Task）实现了一个异步调用的语法糖，而非真正的线程，控制C#协程调度和回调的分别为一下两个类
 * TaskScheduler：可以自定义TaskScheduler实现调度器，负责调度rpc发送到哪个线程或哪个进程，线程间直接投递到目标线程的消息队列，进程间先通过tcp发送，到达目标进程后再投递到目标线程的消息队列
 * SynchronizationContext：可以自定义SynchronizationContext实现回调，负责把rpc返回的结果交给原线程处理
+  （应该有更好的方式，不需要SynchronizationContext）
 
 
 ## ORM（未开始）
@@ -36,13 +37,13 @@
 
     只实现数据实体自动同步给DBService rpc接口，具体DBService的缓存策略和数据库的选择由使用者决定  
 
-## 通信（未开始）
-接入netty
+## 通信（开始）
+接入netty，kcp
 
     不一定真的接入Netty，因为框架想展示的是游戏服务器的线程模型和运行机制
 
 ## Generator代码生成工具（未开始）
-### RcpGenerator（未开始）
+### RcpGenerator（完成）
 根据Service上暴露的Rpc函数，生成Rpc代理，提供给其他服务调用
 ### SerializeGenerator（未开始）
 RcpGenerator的伴生物，Rpc的参数可以是任意类型，那么就要对自定义的参数进行序列化。使用Protobuf底层的流序列化 反序列化，但不在pb文件中定义协议结构，而是通过特性标记逻辑类的字段，通过工具生成类似pb类的类。
